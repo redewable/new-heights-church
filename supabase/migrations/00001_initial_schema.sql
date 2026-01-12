@@ -7,7 +7,7 @@
 create extension if not exists "pgcrypto";
 
 -- ===========================================
--- CORE USER TABLES
+-- CORE USER TABLESS
 -- ===========================================
 
 -- PROFILES (extends Supabase auth.users)

@@ -3,13 +3,38 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Save, Loader2 } from "lucide-react";
+import { Save, Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
+import Image from "next/image";
 import type { Sermon, Speaker, Series } from "@/lib/types";
 
 interface SermonFormProps {
   sermon?: Sermon;
   speakers: Pick<Speaker, "id" | "name">[];
   series: Pick<Series, "id" | "title">[];
+}
+
+// Extract YouTube video ID from various URL formats
+function extractYouTubeId(input: string): string {
+  if (!input) return "";
+  
+  // Already just an ID (11 characters, no special chars except - and _)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(input.trim())) {
+    return input.trim();
+  }
+  
+  // Try to extract from URL
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
+  ];
+  
+  for (const pattern of patterns) {
+    const match = input.match(pattern);
+    if (match) return match[1];
+  }
+  
+  // Return as-is if we can't parse it
+  return input.trim();
 }
 
 export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
@@ -24,15 +49,33 @@ export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
     speaker_id: sermon?.speaker_id || "",
     series_id: sermon?.series_id || "",
     youtube_video_id: sermon?.youtube_video_id || "",
+    thumbnail_url: sermon?.thumbnail_url || "",
     notes: sermon?.notes || "",
     published: sermon?.published || false,
   });
+
+  const [youtubeInput, setYoutubeInput] = useState(sermon?.youtube_video_id || "");
 
   const generateSlug = (title: string) => {
     return title
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/(^-|-$)/g, "");
+  };
+
+  const handleYoutubeChange = (value: string) => {
+    setYoutubeInput(value);
+    const videoId = extractYouTubeId(value);
+    setFormData({ ...formData, youtube_video_id: videoId });
+    
+    // Auto-generate thumbnail from YouTube if no custom thumbnail
+    if (videoId && !formData.thumbnail_url) {
+      setFormData(prev => ({
+        ...prev,
+        youtube_video_id: videoId,
+        thumbnail_url: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
+      }));
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -49,6 +92,7 @@ export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
       speaker_id: formData.speaker_id || null,
       series_id: formData.series_id || null,
       youtube_video_id: formData.youtube_video_id || null,
+      thumbnail_url: formData.thumbnail_url || null,
       notes: formData.notes || null,
       published: formData.published,
     };
@@ -156,16 +200,60 @@ export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
         </div>
 
         <div>
-          <label htmlFor="youtube" className="label">YouTube Video ID</label>
+          <label htmlFor="youtube" className="label">YouTube Video</label>
           <input
             id="youtube"
             type="text"
             className="input"
-            placeholder="e.g. dQw4w9WgXcQ"
-            value={formData.youtube_video_id}
-            onChange={(e) => setFormData({ ...formData, youtube_video_id: e.target.value })}
+            placeholder="Paste YouTube URL or video ID"
+            value={youtubeInput}
+            onChange={(e) => handleYoutubeChange(e.target.value)}
           />
-          <p className="text-text-muted text-xs mt-1">The ID from the YouTube URL (after v=)</p>
+          <p className="text-text-muted text-xs mt-1">
+            Paste the full YouTube URL (e.g. https://youtube.com/watch?v=xxxxx) or just the video ID
+          </p>
+          {formData.youtube_video_id && (
+            <p className="text-gold text-xs mt-1">
+              ✓ Video ID: {formData.youtube_video_id}
+            </p>
+          )}
+        </div>
+
+        <div>
+          <label htmlFor="thumbnail" className="label">Thumbnail URL</label>
+          <input
+            id="thumbnail"
+            type="text"
+            className="input"
+            placeholder="https://example.com/thumbnail.jpg"
+            value={formData.thumbnail_url}
+            onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
+          />
+          <p className="text-text-muted text-xs mt-1">
+            Custom thumbnail image URL (auto-generated from YouTube if left blank)
+          </p>
+          {formData.thumbnail_url && (
+            <div className="mt-3 relative">
+              <div className="relative w-48 aspect-video rounded-lg overflow-hidden bg-bg-secondary">
+                <Image
+                  src={formData.thumbnail_url}
+                  alt="Thumbnail preview"
+                  fill
+                  className="object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23333' width='100' height='100'/%3E%3Ctext fill='%23666' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENo preview%3C/text%3E%3C/svg%3E";
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setFormData({ ...formData, thumbnail_url: "" })}
+                className="absolute top-1 right-1 p-1 rounded-full bg-bg/80 text-text-secondary hover:text-error-light"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+          )}
         </div>
 
         <div>

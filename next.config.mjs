@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+cat > next.config.mjs << 'EOF'
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
     remotePatterns: [
       {
@@ -17,11 +17,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // Enable experimental features for better performance
-  experimental: {
-    // Enable partial prerendering when stable
-  },
-  // Redirect /admin to Sanity Studio
   async redirects() {
     return [
       {
@@ -34,3 +29,4 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+EOF

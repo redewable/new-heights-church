@@ -60,18 +60,20 @@ export function Footer() {
             {/* Contact Info */}
             <div className="space-y-3 text-sm text-text-secondary">
               <a 
-                href="#" 
+                href="https://maps.google.com/?q=8125+Turkey+Creek+Rd+College+Station+TX+77845" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center gap-3 hover:text-gold transition-colors"
               >
                 <MapPin className="w-4 h-4 text-gold flex-shrink-0" />
-                <span>123 Church Street, City, ST 12345</span>
+                <span>8125 Turkey Creek Rd.<br />College Station, TX 77845</span>
               </a>
               <a 
-                href="tel:+15551234567" 
+                href="tel:+19793147585" 
                 className="flex items-center gap-3 hover:text-gold transition-colors"
               >
                 <Phone className="w-4 h-4 text-gold flex-shrink-0" />
-                <span>(555) 123-4567</span>
+                <span>979-314-7585</span>
               </a>
               <a 
                 href="mailto:hello@newheightschurch.com" 

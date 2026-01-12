@@ -91,7 +91,7 @@ export function HeroDefault() {
           >
             <Heart className="w-4 h-4 text-gold" />
             <span className="text-text-secondary text-sm">
-              Join us Sundays at <span className="text-text-primary font-medium">9:00 AM</span> & <span className="text-text-primary font-medium">11:00 AM</span>
+              Join us Sundays at <span className="text-text-primary font-medium">10:00 AM</span> & Wednesdays at <span className="text-text-primary font-medium">7:00 PM</span>
             </span>
           </motion.div>
         </motion.div>

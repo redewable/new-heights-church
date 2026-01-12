@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, User, ChevronDown } from "lucide-react";
@@ -59,9 +60,14 @@ export function Header() {
             href="/" 
             className="flex items-center gap-3 group"
           >
-            {/* Logo placeholder - replace with actual logo */}
-            <div className="w-10 h-10 rounded-lg bg-gold flex items-center justify-center">
-              <span className="font-heading text-bg font-bold text-lg">NH</span>
+            <div className="w-10 h-10 relative">
+              <Image
+                src="/images/brand/logo.png"
+                alt="New Heights Church"
+                fill
+                className="object-contain invert brightness-0 group-hover:brightness-100 group-hover:invert-0 transition-all"
+                style={{ filter: "invert(1)" }}
+              />
             </div>
             <div className="hidden sm:block">
               <span className="font-heading text-lg text-text-primary group-hover:text-gold transition-colors">

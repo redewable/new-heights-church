@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Instagram, Youtube, Mail, MapPin, Phone } from "lucide-react";
 
 const footerLinks = {
@@ -39,8 +40,14 @@ export function Footer() {
           <div className="lg:col-span-2">
             {/* Logo */}
             <Link href="/" className="inline-flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 rounded-lg bg-gold flex items-center justify-center">
-                <span className="font-heading text-bg font-bold text-xl">NH</span>
+              <div className="w-12 h-12 relative">
+                <Image
+                  src="/images/brand/logo.png"
+                  alt="New Heights Church"
+                  fill
+                  className="object-contain"
+                  style={{ filter: "invert(1)" }}
+                />
               </div>
               <div>
                 <span className="font-heading text-xl text-text-primary block">

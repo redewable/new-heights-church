@@ -50,6 +50,18 @@ export default function AboutPage() {
               <h2 className="font-heading text-display-sm text-text-primary mb-6">
                 You Matter to God.<br />You Matter to Us.
               </h2>
+              
+              {/* Why We Exist Graphic */}
+              <div className="relative h-20 mb-6">
+                <Image
+                  src="/images/brand/why-we-exist.png"
+                  alt="Love People and Point Them to Christ"
+                  fill
+                  className="object-contain object-left"
+                  style={{ filter: "invert(1)" }}
+                />
+              </div>
+              
               <div className="space-y-4 text-text-secondary">
                 <p>
                   New Heights has a clear vision: To Love People and Point Them to Christ. Join us and help reach the community of Bryan/College Station!

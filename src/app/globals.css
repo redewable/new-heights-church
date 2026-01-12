@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   NEW HEIGHTS CHURCH - GLOBAL STYLES
+   Premium, Bold, Future-Forward
+   ============================================ */
+
+@layer base {
+  :root {
+    /* Core Brand Colors */
+    --color-gold: 197 160 89;
+    --color-bg: 10 10 10;
+    --color-bg-secondary: 17 17 17;
+    --color-text-primary: 245 245 245;
+    --color-text-secondary: 160 160 160;
+    
+    /* Semantic Colors */
+    --color-live: 197 48 48;
+    --color-success: 45 90 61;
+    --color-warning: 139 115 85;
+    --color-error: 139 61 61;
+    
+    /* Spacing */
+    --container-max-width: 1400px;
+    --header-height: 80px;
+    
+    /* Transitions */
+    --transition-fast: 150ms ease;
+    --transition-base: 300ms ease;
+    --transition-slow: 500ms ease;
+  }
+
+  /* Dark theme is default - no light mode */
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg text-text-primary font-body antialiased;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  /* Heading defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+
+  /* Focus states for accessibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* Selection styling */
+  ::selection {
+    @apply bg-gold/30 text-text-primary;
+  }
+
+  /* Scrollbar styling (Webkit) */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-bg-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gold/30 rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gold/50;
+  }
+}
+
+@layer components {
+  /* Container */
+  .container-site {
+    @apply mx-auto max-w-[1400px] px-6 lg:px-8;
+  }
+
+  /* Premium Button Base */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 
+           font-heading text-sm uppercase tracking-widest
+           px-6 py-3 rounded-lg
+           transition-all duration-300 ease-out
+           focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold
+           disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply btn bg-gold text-bg hover:bg-gold-400 
+           shadow-gold-glow hover:shadow-gold-glow-strong;
+  }
+
+  .btn-secondary {
+    @apply btn bg-transparent border-2 border-gold text-gold
+           hover:bg-gold hover:text-bg;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-text-primary
+           hover:bg-white/5;
+  }
+
+  /* Card base */
+  .card {
+    @apply bg-bg-elevated rounded-xl p-6
+           border border-white/5
+           transition-all duration-300
+           hover:border-gold/20 hover:shadow-elevated;
+  }
+
+  /* Section spacing */
+  .section {
+    @apply py-16 md:py-24;
+  }
+
+  /* Gold gradient text */
+  .text-gradient-gold {
+    @apply bg-gradient-gold bg-clip-text text-transparent;
+  }
+
+  /* Live indicator */
+  .live-indicator {
+    @apply inline-flex items-center gap-2 px-3 py-1 
+           bg-live/20 text-live rounded-full text-sm font-bold uppercase tracking-wider;
+  }
+
+  .live-indicator::before {
+    content: "";
+    @apply w-2 h-2 bg-live rounded-full animate-pulse-live;
+  }
+
+  /* Form inputs */
+  .input {
+    @apply w-full px-4 py-3 
+           bg-bg-secondary border border-white/10 rounded-lg
+           text-text-primary placeholder:text-text-muted
+           focus:border-gold focus:ring-1 focus:ring-gold
+           transition-colors duration-200;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-text-secondary mb-2;
+  }
+
+  /* Video player container (16:9) */
+  .video-container {
+    @apply relative w-full aspect-video bg-bg-secondary rounded-xl overflow-hidden;
+  }
+
+  /* Skeleton loading */
+  .skeleton {
+    @apply bg-gradient-to-r from-bg-secondary via-bg-tertiary to-bg-secondary
+           bg-[length:200%_100%] animate-shimmer rounded;
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Gold border accent */
+  .border-gold-accent {
+    @apply border-l-4 border-gold pl-4;
+  }
+
+  /* Backdrop blur with fallback */
+  .backdrop-premium {
+    @apply backdrop-blur-xl bg-bg/80;
+  }
+
+  /* Safe area padding for mobile */
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+
+  .safe-top {
+    padding-top: env(safe-area-inset-top, 0);
+  }
+}

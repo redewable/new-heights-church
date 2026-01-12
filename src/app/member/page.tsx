@@ -81,7 +81,8 @@ export default async function MemberDashboardPage() {
     .eq("id", user.id)
     .single();
 
-  const displayName = profile?.full_name || user.email?.split("@")[0] || "Member";
+  const profileData = profile as { full_name?: string } | null;
+  const displayName = profileData?.full_name || user.email?.split("@")[0] || "Member";
 
   return (
     <div className="min-h-screen bg-bg pt-28 pb-16">

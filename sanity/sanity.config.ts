@@ -10,7 +10,7 @@ export default defineConfig({
   name: 'new-heights-church',
   title: 'New Heights Church',
 
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'placeholder',
+  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || '9xkf16ky',
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
 
   plugins: [

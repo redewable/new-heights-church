@@ -17,12 +17,16 @@ function SermonCard({ sermon }: { sermon: any }) {
       })
     : "";
 
+  // Prefer custom thumbnail, fall back to YouTube thumbnail
+  const thumbnailUrl = sermon.thumbnail_url 
+    || (sermon.youtube_video_id ? `https://i.ytimg.com/vi/${sermon.youtube_video_id}/hqdefault.jpg` : null);
+
   return (
     <Link href={`/watch/message/${sermon.slug}`} className="card group">
       <div className="relative aspect-video rounded-lg overflow-hidden mb-4 bg-bg-tertiary">
-        {sermon.youtube_video_id ? (
+        {thumbnailUrl ? (
           <Image
-            src={`https://i.ytimg.com/vi/${sermon.youtube_video_id}/hqdefault.jpg`}
+            src={thumbnailUrl}
             alt={sermon.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Save, Loader2, Upload, X, Image as ImageIcon } from "lucide-react";
-import Image from "next/image";
+import { Save, Loader2, Play } from "lucide-react";
+import { ImageUpload } from "@/components/ui/ImageUpload";
 import type { Sermon, Speaker, Series } from "@/lib/types";
 
 interface SermonFormProps {
@@ -17,24 +17,32 @@ interface SermonFormProps {
 function extractYouTubeId(input: string): string {
   if (!input) return "";
   
-  // Already just an ID (11 characters, no special chars except - and _)
-  if (/^[a-zA-Z0-9_-]{11}$/.test(input.trim())) {
-    return input.trim();
+  const trimmed = input.trim();
+  
+  // Already just an ID (11 characters, alphanumeric with - and _)
+  if (/^[a-zA-Z0-9_-]{11}$/.test(trimmed)) {
+    return trimmed;
   }
   
-  // Try to extract from URL
+  // Try to extract from various URL formats
   const patterns = [
-    /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-    /youtube\.com\/watch\?.*v=([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/watch\?v=)([a-zA-Z0-9_-]{11})/,
+    /(?:youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/v\/)([a-zA-Z0-9_-]{11})/,
+    /(?:youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/,
   ];
   
   for (const pattern of patterns) {
-    const match = input.match(pattern);
-    if (match) return match[1];
+    const match = trimmed.match(pattern);
+    if (match && match[1]) return match[1];
   }
   
-  // Return as-is if we can't parse it
-  return input.trim();
+  // If it looks like it could be an ID but with extra stuff, try to extract 11 chars
+  const possibleId = trimmed.match(/([a-zA-Z0-9_-]{11})/);
+  if (possibleId) return possibleId[1];
+  
+  return "";
 }
 
 export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
@@ -54,7 +62,11 @@ export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
     published: sermon?.published || false,
   });
 
-  const [youtubeInput, setYoutubeInput] = useState(sermon?.youtube_video_id || "");
+  const [youtubeInput, setYoutubeInput] = useState(
+    sermon?.youtube_video_id 
+      ? `https://youtube.com/watch?v=${sermon.youtube_video_id}` 
+      : ""
+  );
 
   const generateSlug = (title: string) => {
     return title
@@ -66,16 +78,13 @@ export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
   const handleYoutubeChange = (value: string) => {
     setYoutubeInput(value);
     const videoId = extractYouTubeId(value);
-    setFormData({ ...formData, youtube_video_id: videoId });
     
-    // Auto-generate thumbnail from YouTube if no custom thumbnail
-    if (videoId && !formData.thumbnail_url) {
-      setFormData(prev => ({
-        ...prev,
-        youtube_video_id: videoId,
-        thumbnail_url: `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      youtube_video_id: videoId,
+      // Auto-generate thumbnail from YouTube if no custom thumbnail set
+      thumbnail_url: prev.thumbnail_url || (videoId ? `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg` : "")
+    }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -210,50 +219,35 @@ export function SermonForm({ sermon, speakers, series }: SermonFormProps) {
             onChange={(e) => handleYoutubeChange(e.target.value)}
           />
           <p className="text-text-muted text-xs mt-1">
-            Paste the full YouTube URL (e.g. https://youtube.com/watch?v=xxxxx) or just the video ID
+            Paste the full YouTube URL (e.g. https://youtube.com/watch?v=xxxxx)
           </p>
           {formData.youtube_video_id && (
-            <p className="text-gold text-xs mt-1">
-              ✓ Video ID: {formData.youtube_video_id}
-            </p>
+            <div className="mt-3">
+              <p className="text-gold text-xs mb-2">
+                ✓ Video ID: {formData.youtube_video_id}
+              </p>
+              {/* Video Preview */}
+              <div className="relative aspect-video w-full max-w-md rounded-lg overflow-hidden bg-bg-secondary border border-white/10">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${formData.youtube_video_id}?rel=0`}
+                  title="Video preview"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full"
+                />
+              </div>
+            </div>
           )}
         </div>
 
         <div>
-          <label htmlFor="thumbnail" className="label">Thumbnail URL</label>
-          <input
-            id="thumbnail"
-            type="text"
-            className="input"
-            placeholder="https://example.com/thumbnail.jpg"
+          <label className="label">Thumbnail</label>
+          <ImageUpload
             value={formData.thumbnail_url}
-            onChange={(e) => setFormData({ ...formData, thumbnail_url: e.target.value })}
+            onChange={(url) => setFormData({ ...formData, thumbnail_url: url })}
+            folder="sermons"
+            placeholder="Drag and drop a thumbnail image"
           />
-          <p className="text-text-muted text-xs mt-1">
-            Custom thumbnail image URL (auto-generated from YouTube if left blank)
-          </p>
-          {formData.thumbnail_url && (
-            <div className="mt-3 relative">
-              <div className="relative w-48 aspect-video rounded-lg overflow-hidden bg-bg-secondary">
-                <Image
-                  src={formData.thumbnail_url}
-                  alt="Thumbnail preview"
-                  fill
-                  className="object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23333' width='100' height='100'/%3E%3Ctext fill='%23666' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENo preview%3C/text%3E%3C/svg%3E";
-                  }}
-                />
-              </div>
-              <button
-                type="button"
-                onClick={() => setFormData({ ...formData, thumbnail_url: "" })}
-                className="absolute top-1 right-1 p-1 rounded-full bg-bg/80 text-text-secondary hover:text-error-light"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-          )}
         </div>
 
         <div>

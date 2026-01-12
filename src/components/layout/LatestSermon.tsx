@@ -1,25 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Play, Clock, User } from "lucide-react";
-import { client } from "@/lib/sanity/client";
-
-async function getLatestSermon() {
-  return client.fetch(`
-    *[_type == "sermon"] | order(date desc)[0] {
-      _id,
-      title,
-      "slug": slug.current,
-      date,
-      "speaker": speaker->name,
-      "series": series->title,
-      youtubeVideoId,
-      "thumbnail": thumbnail.asset->url
-    }
-  `);
-}
+import { createClient } from "@/lib/supabase/server";
+import type { Sermon } from "@/lib/types";
 
 export async function LatestSermon() {
-  const sermon = await getLatestSermon();
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("sermons")
+    .select(`
+      *,
+      speaker:speakers(name),
+      series:series(title)
+    `)
+    .eq("published", true)
+    .order("date", { ascending: false })
+    .limit(1)
+    .single();
+
+  const sermon = data as Sermon | null;
 
   if (!sermon) {
     return (
@@ -43,16 +43,9 @@ export async function LatestSermon() {
     <div className="card group cursor-pointer hover:shadow-gold-glow transition-all duration-500">
       <Link href={`/watch/message/${sermon.slug}`} className="block">
         <div className="relative aspect-video rounded-lg overflow-hidden mb-4 bg-bg-tertiary">
-          {sermon.thumbnail ? (
+          {sermon.youtube_video_id ? (
             <Image
-              src={sermon.thumbnail}
-              alt={sermon.title}
-              fill
-              className="object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-          ) : sermon.youtubeVideoId ? (
-            <Image
-              src={`https://i.ytimg.com/vi/${sermon.youtubeVideoId}/hqdefault.jpg`}
+              src={`https://i.ytimg.com/vi/${sermon.youtube_video_id}/hqdefault.jpg`}
               alt={sermon.title}
               fill
               className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -73,14 +66,14 @@ export async function LatestSermon() {
           <h3 className="font-heading text-heading-lg text-text-primary mb-2 group-hover:text-gold transition-colors">
             {sermon.title}
           </h3>
-          {sermon.series && (
-            <p className="text-text-secondary text-sm mb-3">{sermon.series}</p>
+          {sermon.series?.title && (
+            <p className="text-text-secondary text-sm mb-3">{sermon.series.title}</p>
           )}
           <div className="flex items-center gap-4 text-xs text-text-muted">
-            {sermon.speaker && (
+            {sermon.speaker?.name && (
               <span className="flex items-center gap-1">
                 <User className="w-3 h-3" />
-                {sermon.speaker}
+                {sermon.speaker.name}
               </span>
             )}
             {date && (

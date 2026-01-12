@@ -1,27 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Play, Clock, User } from "lucide-react";
-import { client } from "@/lib/sanity/client";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata = {
   title: "Watch",
   description: "Browse our sermon archive and watch messages on-demand.",
 };
-
-async function getSermons() {
-  return client.fetch(`
-    *[_type == "sermon"] | order(date desc) {
-      _id,
-      title,
-      "slug": slug.current,
-      date,
-      "speaker": speaker->name,
-      "series": series->title,
-      youtubeVideoId,
-      "thumbnail": thumbnail.asset->url
-    }
-  `);
-}
 
 function SermonCard({ sermon }: { sermon: any }) {
   const date = sermon.date
@@ -35,16 +20,9 @@ function SermonCard({ sermon }: { sermon: any }) {
   return (
     <Link href={`/watch/message/${sermon.slug}`} className="card group">
       <div className="relative aspect-video rounded-lg overflow-hidden mb-4 bg-bg-tertiary">
-        {sermon.thumbnail ? (
+        {sermon.youtube_video_id ? (
           <Image
-            src={sermon.thumbnail}
-            alt={sermon.title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : sermon.youtubeVideoId ? (
-          <Image
-            src={`https://i.ytimg.com/vi/${sermon.youtubeVideoId}/hqdefault.jpg`}
+            src={`https://i.ytimg.com/vi/${sermon.youtube_video_id}/hqdefault.jpg`}
             alt={sermon.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -58,19 +36,19 @@ function SermonCard({ sermon }: { sermon: any }) {
         )}
       </div>
       <div>
-        {sermon.series && (
+        {sermon.series?.title && (
           <p className="text-gold text-xs uppercase tracking-wider mb-1">
-            {sermon.series}
+            {sermon.series.title}
           </p>
         )}
         <h3 className="font-heading text-heading-sm text-text-primary mb-2 group-hover:text-gold transition-colors line-clamp-2">
           {sermon.title}
         </h3>
         <div className="flex items-center gap-3 text-xs text-text-muted">
-          {sermon.speaker && (
+          {sermon.speaker?.name && (
             <span className="flex items-center gap-1">
               <User className="w-3 h-3" />
-              {sermon.speaker}
+              {sermon.speaker.name}
             </span>
           )}
           {date && (
@@ -86,7 +64,17 @@ function SermonCard({ sermon }: { sermon: any }) {
 }
 
 export default async function WatchPage() {
-  const sermons = await getSermons();
+  const supabase = await createClient();
+
+  const { data: sermons } = await supabase
+    .from("sermons")
+    .select(`
+      *,
+      speaker:speakers(name),
+      series:series(title)
+    `)
+    .eq("published", true)
+    .order("date", { ascending: false });
 
   return (
     <div className="min-h-screen bg-bg pt-28 pb-16">
@@ -106,7 +94,7 @@ export default async function WatchPage() {
         {sermons && sermons.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sermons.map((sermon: any) => (
-              <SermonCard key={sermon._id} sermon={sermon} />
+              <SermonCard key={sermon.id} sermon={sermon} />
             ))}
           </div>
         ) : (

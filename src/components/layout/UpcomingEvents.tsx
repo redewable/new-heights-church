@@ -1,28 +1,22 @@
 import Link from "next/link";
-import { Calendar, MapPin, ArrowRight } from "lucide-react";
-import { client } from "@/lib/sanity/client";
-
-async function getUpcomingEvents() {
-  const now = new Date().toISOString();
-  return client.fetch(
-    `
-    *[_type == "event" && startDate >= $now] | order(startDate asc)[0...6] {
-      _id,
-      title,
-      "slug": slug.current,
-      startDate,
-      location,
-      featured
-    }
-  `,
-    { now }
-  );
-}
+import { MapPin, ArrowRight } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
+import type { Event } from "@/lib/types";
 
 export async function UpcomingEvents() {
-  const events = await getUpcomingEvents();
+  const supabase = await createClient();
 
-  if (!events || events.length === 0) {
+  const { data } = await supabase
+    .from("events")
+    .select("*")
+    .eq("published", true)
+    .gte("start_date", new Date().toISOString())
+    .order("start_date", { ascending: true })
+    .limit(6);
+
+  const events = (data || []) as Event[];
+
+  if (events.length === 0) {
     return (
       <div>
         <div className="flex items-center justify-between mb-8">
@@ -62,8 +56,8 @@ export async function UpcomingEvents() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {events.map((event: any) => {
-          const eventDate = new Date(event.startDate);
+        {events.map((event) => {
+          const eventDate = new Date(event.start_date);
           const month = eventDate.toLocaleDateString("en-US", { month: "short" });
           const day = eventDate.getDate();
           const time = eventDate.toLocaleTimeString("en-US", {
@@ -73,7 +67,7 @@ export async function UpcomingEvents() {
 
           return (
             <Link
-              key={event._id}
+              key={event.id}
               href={`/events/${event.slug}`}
               className="card group"
             >

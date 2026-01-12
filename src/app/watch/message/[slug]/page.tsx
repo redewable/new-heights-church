@@ -1,36 +1,24 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, Calendar, User, BookOpen } from "lucide-react";
-import { client } from "@/lib/sanity/client";
+import { createClient } from "@/lib/supabase/server";
+import type { Sermon } from "@/lib/types";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
-async function getSermon(slug: string) {
-  return client.fetch(
-    `
-    *[_type == "sermon" && slug.current == $slug][0] {
-      _id,
-      title,
-      "slug": slug.current,
-      date,
-      "speaker": speaker->name,
-      "series": series->title,
-      "seriesSlug": series->slug.current,
-      youtubeVideoId,
-      notes,
-      keyPoints,
-      scriptureReferences
-    }
-  `,
-    { slug }
-  );
-}
-
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
-  const sermon = await getSermon(slug);
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("sermons")
+    .select("title")
+    .eq("slug", slug)
+    .single();
+
+  const sermon = data as { title: string } | null;
 
   if (!sermon) {
     return { title: "Sermon Not Found" };
@@ -44,7 +32,19 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function SermonPage({ params }: PageProps) {
   const { slug } = await params;
-  const sermon = await getSermon(slug);
+  const supabase = await createClient();
+
+  const { data } = await supabase
+    .from("sermons")
+    .select(`
+      *,
+      speaker:speakers(name),
+      series:series(title, slug)
+    `)
+    .eq("slug", slug)
+    .single();
+
+  const sermon = data as Sermon | null;
 
   if (!sermon) {
     notFound();
@@ -61,7 +61,6 @@ export default async function SermonPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-bg pt-24 pb-16">
       <div className="container-site">
-        {/* Back Link */}
         <Link
           href="/watch"
           className="inline-flex items-center gap-2 text-text-secondary hover:text-gold transition-colors mb-8"
@@ -70,11 +69,10 @@ export default async function SermonPage({ params }: PageProps) {
           Back to Messages
         </Link>
 
-        {/* Video Player */}
-        {sermon.youtubeVideoId && (
+        {sermon.youtube_video_id && (
           <div className="video-container mb-8 shadow-gold-glow">
             <iframe
-              src={`https://www.youtube.com/embed/${sermon.youtubeVideoId}`}
+              src={`https://www.youtube.com/embed/${sermon.youtube_video_id}`}
               title={sermon.title}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -83,29 +81,22 @@ export default async function SermonPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* Sermon Info */}
         <div className="max-w-3xl">
-          {/* Series Badge */}
-          {sermon.series && (
-            <Link
-              href={`/watch/series/${sermon.seriesSlug}`}
-              className="inline-block px-3 py-1 bg-gold/10 text-gold text-xs uppercase tracking-wider rounded mb-4 hover:bg-gold/20 transition-colors"
-            >
-              {sermon.series}
-            </Link>
+          {sermon.series?.title && (
+            <span className="inline-block px-3 py-1 bg-gold/10 text-gold text-xs uppercase tracking-wider rounded mb-4">
+              {sermon.series.title}
+            </span>
           )}
 
-          {/* Title */}
           <h1 className="font-heading text-display-sm md:text-display-md text-text-primary mb-4">
             {sermon.title}
           </h1>
 
-          {/* Meta */}
           <div className="flex flex-wrap items-center gap-4 text-text-secondary mb-8">
-            {sermon.speaker && (
+            {sermon.speaker?.name && (
               <span className="flex items-center gap-2">
                 <User className="w-4 h-4 text-gold" />
-                {sermon.speaker}
+                {sermon.speaker.name}
               </span>
             )}
             {date && (
@@ -116,15 +107,14 @@ export default async function SermonPage({ params }: PageProps) {
             )}
           </div>
 
-          {/* Scripture References */}
-          {sermon.scriptureReferences && sermon.scriptureReferences.length > 0 && (
+          {sermon.scripture_refs && sermon.scripture_refs.length > 0 && (
             <div className="mb-8">
               <h2 className="font-heading text-heading-sm text-text-primary mb-3 flex items-center gap-2">
                 <BookOpen className="w-4 h-4 text-gold" />
                 Scripture References
               </h2>
               <div className="flex flex-wrap gap-2">
-                {sermon.scriptureReferences.map((ref: string, i: number) => (
+                {sermon.scripture_refs.map((ref, i) => (
                   <span
                     key={i}
                     className="px-3 py-1 bg-white/5 text-text-secondary text-sm rounded"
@@ -136,14 +126,13 @@ export default async function SermonPage({ params }: PageProps) {
             </div>
           )}
 
-          {/* Key Points */}
-          {sermon.keyPoints && sermon.keyPoints.length > 0 && (
+          {sermon.key_points && sermon.key_points.length > 0 && (
             <div className="mb-8">
               <h2 className="font-heading text-heading-sm text-text-primary mb-3">
                 Key Points
               </h2>
               <ul className="space-y-2">
-                {sermon.keyPoints.map((point: string, i: number) => (
+                {sermon.key_points.map((point, i) => (
                   <li key={i} className="flex items-start gap-3 text-text-secondary">
                     <span className="w-6 h-6 rounded-full bg-gold/10 text-gold text-xs flex items-center justify-center flex-shrink-0 mt-0.5">
                       {i + 1}
@@ -152,6 +141,17 @@ export default async function SermonPage({ params }: PageProps) {
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {sermon.notes && (
+            <div className="mb-8">
+              <h2 className="font-heading text-heading-sm text-text-primary mb-3">
+                Notes
+              </h2>
+              <div className="text-text-secondary whitespace-pre-wrap">
+                {sermon.notes}
+              </div>
             </div>
           )}
         </div>

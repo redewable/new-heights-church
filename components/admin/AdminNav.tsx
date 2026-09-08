@@ -34,6 +34,13 @@ const GROUPS: ReadonlyArray<{
     ],
   },
   {
+    label: "Previews",
+    items: [
+      { label: "Member portal", href: "/member" },
+      { label: "Young Lions check-in", href: "/checkin" },
+    ],
+  },
+  {
     label: "System",
     items: [
       { label: "Email & follow-up", href: "/admin/email" },

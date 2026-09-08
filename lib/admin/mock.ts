@@ -579,16 +579,18 @@ export const ROADMAP: RoadmapItem[] = [
   // Ideas from the January build (not in the RFP)
   {
     area: "Ideas from the January build",
-    name: "Member portal (sign-in, giving history, groups)",
-    status: "optional",
+    name: "Member portal (sign-in, giving, family, serving)",
+    status: "preview",
     phase: "—",
-    note: "Church Center already covers most of this; decide whether an on-site portal earns its keep.",
+    note: "Sign-in, the path, giving read from Pushpay, family and check-in code, serving schedule.",
+    href: "/member",
   },
   {
     area: "Ideas from the January build",
-    name: "Young Lions check-in and room roster",
-    status: "optional",
+    name: "Young Lions check-in kiosk and room roster",
+    status: "preview",
     phase: "—",
-    note: "Planning Center Check-Ins exists; an on-site version would need printers and kiosks.",
+    note: "Tablet kiosk with phone lookup or family code, printed tags with matching codes, room roster with allergies and paging.",
+    href: "/checkin",
   },
 ];

@@ -68,12 +68,9 @@ export default function MemberFamily() {
                       <span className="text-ink font-medium">{c.room}</span>
                     </p>
                     <div className="mt-2 flex flex-wrap gap-2">
-                      {c.allergies.map((a) => (
-                        <StatusPill key={a} status="failed" />
-                      ))}
                       {c.allergies.length > 0 ? (
-                        <span className="text-xs font-semibold text-[color:var(--nh-scarlet-ink)]">
-                          Allergy: {c.allergies.join(", ")}
+                        <span className="u-eyebrow inline-flex items-center rounded-full bg-[color:var(--nh-scarlet)] px-2.5 py-1 text-white">
+                          Allergy · {c.allergies.join(", ")}
                         </span>
                       ) : (
                         <span className="text-fog text-xs">No allergies on file</span>

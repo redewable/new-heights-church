@@ -40,7 +40,7 @@ export function Field({
     .filter(Boolean)
     .join(" ");
   return (
-    <div className={cn("flex flex-col gap-2", className)}>
+    <div className={cn("flex h-full flex-col gap-2", className)}>
       <label
         htmlFor={id}
         className={cn(
@@ -60,7 +60,9 @@ export function Field({
           {help}
         </p>
       ) : null}
-      <div data-described-by={describedBy || undefined}>{children}</div>
+      <div data-described-by={describedBy || undefined} className="mt-auto">
+        {children}
+      </div>
       <p
         id={`${id}-error`}
         role={error ? "alert" : undefined}

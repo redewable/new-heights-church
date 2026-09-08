@@ -53,7 +53,7 @@ export function PrayerRequestForm() {
         <TextInput
           id="name"
           label="Your name"
-          help="Optional. Skip if you'd rather stay anonymous."
+          help="Optional. Leave blank to stay anonymous."
           autoComplete="name"
           disabled={anonymous}
           error={fieldError("name")}

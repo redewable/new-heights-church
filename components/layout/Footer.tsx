@@ -62,7 +62,7 @@ export function Footer() {
           <WordMark tone="cream" />
           <div className="flex items-center gap-3">
             <AscendingBars size={22} tone="pillars" aria-label="" />
-            <span className="u-eyebrow text-[color:var(--nh-gold)] md:whitespace-nowrap">
+            <span className="u-eyebrow text-[color:var(--nh-gold)] lg:whitespace-nowrap">
               {PILLAR_STRIP}
             </span>
           </div>
@@ -185,12 +185,12 @@ function FooterCol({
 }) {
   return (
     <div>
-      <h2 className="u-eyebrow mb-4 whitespace-nowrap text-[color:var(--nh-gold)]">
+      <h2 className="u-eyebrow mb-4 text-[color:var(--nh-gold)] lg:whitespace-nowrap">
         {title}
       </h2>
       <ul className="space-y-2.5 text-sm">
         {items.map((item) => (
-          <li key={item.href} className="whitespace-nowrap">
+          <li key={item.href} className="lg:whitespace-nowrap">
             {item.external ? (
               <a
                 href={item.href}

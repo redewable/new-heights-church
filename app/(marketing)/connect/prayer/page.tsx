@@ -25,8 +25,8 @@ export default function PrayerPage() {
       />
       <FormShell
         kicker="Prayer request"
-        title={<>We pray. That&rsquo;s not a metaphor.</>}
-        lead="Our intercessory team meets weekly and carries every request. Write as much or as little as you want — anonymity is an option."
+        title="The house will pray for you."
+        lead="Every request goes to the intercessory team and is prayed over that week — urgent ones the same day. Write as much or as little as you want, and stay anonymous if you'd rather."
       >
         <PrayerRequestForm />
       </FormShell>

@@ -21,7 +21,7 @@ This repo is the NHC website under RFP NHC-26-001. Before making changes, the au
 - **Canonical facts** live only in `lib/constants/church.ts` (church), `lib/constants/bhm.ts` (Brian Hallam Ministries + the book), `lib/constants/announcements.ts` (top strip) — don't hard-code addresses, phone, service times, or URLs elsewhere.
 - **2026 conference is "Activated" (New Heights Conference 2026)** (Sept 24–27; Pastor Paula White, Prophet Dr. Lashund Lambert, Prophet Richard Summerlin). Slug `activated-2026`; migration 0008 renames it and redirects the old slugs.
 - **Events carry `registration_status` and `speakers`.** Cards and the detail page read `lib/events/status.ts` for CTA state — never null the URL to "close" an event.
-- **The data layer never throws into a page.** Every Supabase read goes through `lib/supabase/guard.ts` (`guarded`): on a thrown error, a returned error, or a row missing required fields it logs a warning and serves fixtures. A CMS outage or stale keys must never 500 the public site.
+- **The data layer never throws into a page.** Every Supabase read goes through `lib/supabase/guard.ts` (`guarded`): on a thrown error, a returned error, or a row missing required fields it logs a warning and serves fixtures. A CMS outage or stale keys must never 500 the public site. Reads take their client from `dataClient()`, which probes once per process that the configured project carries our schema (migrations 0001–0008) and otherwise returns null — so list and detail pages agree on fixture mode instead of the detail page 404ing.
 
 ## Daily commands
 

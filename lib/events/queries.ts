@@ -1,7 +1,6 @@
 import "server-only";
 
-import { supabaseServer } from "@/lib/supabase/server";
-import { guarded, requireFields, requireIsoDate } from "@/lib/supabase/guard";
+import { dataClient, guarded, requireFields, requireIsoDate } from "@/lib/supabase/guard";
 import type { EventRow, EventMinistry } from "@/lib/supabase/types";
 import { EVENT_FIXTURES } from "./fixtures";
 
@@ -52,7 +51,7 @@ export async function listEvents(filters: EventFilters = {}): Promise<EventListR
   return guarded(
     "events.list",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return fixtureList(filters);
 
       const limit = filters.limit ?? 60;
@@ -87,7 +86,7 @@ export async function getEventBySlug(slug: string): Promise<EventRow | null> {
   return guarded(
     "events.bySlug",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return fromFixtures();
       const { data, error } = await db
         .from("events")

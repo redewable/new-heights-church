@@ -1,7 +1,6 @@
 import "server-only";
 
-import { supabaseServer } from "@/lib/supabase/server";
-import { guarded, requireFields } from "@/lib/supabase/guard";
+import { dataClient, guarded, requireFields } from "@/lib/supabase/guard";
 import type { PillarTag, SermonRow, SeriesRow } from "@/lib/supabase/types";
 import { SERIES_FIXTURES, SERMON_FIXTURES } from "./fixtures";
 
@@ -71,7 +70,7 @@ export async function listSermons(
   return guarded(
     "sermons.list",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return fixtureList(filters);
 
       const limit = filters.limit ?? 24;
@@ -131,7 +130,7 @@ export async function getSermonBySlug(slug: string): Promise<SermonRow | null> {
   return guarded(
     "sermons.bySlug",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return fromFixtures();
       const { data, error } = await db
         .from("sermons")
@@ -155,7 +154,7 @@ export async function getSeriesById(id: string | null): Promise<SeriesRow | null
   return guarded(
     "series.byId",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return fromFixtures();
       const { data, error } = await db
         .from("series")
@@ -185,7 +184,7 @@ export async function getSeriesSiblings(
   return guarded(
     "sermons.siblings",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return fromFixtures();
       const { data, error } = await db
         .from("sermons")
@@ -209,7 +208,7 @@ export async function listSeries(): Promise<SeriesRow[]> {
   return guarded(
     "series.list",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return [...SERIES_FIXTURES];
       const { data, error } = await db
         .from("series")
@@ -247,7 +246,7 @@ export async function getSermonFacets(): Promise<{
   return guarded(
     "sermons.facets",
     async () => {
-      const db = await supabaseServer();
+      const db = await dataClient();
       if (!db) return fromFixtures();
 
       const [sermonRes, seriesRes] = await Promise.all([

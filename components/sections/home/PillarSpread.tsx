@@ -48,7 +48,7 @@ export function PillarSpread() {
             className="u-display-dramatic text-ink max-w-[16ch] text-[clamp(2.25rem,4.5vw,3.5rem)]"
           >
             Three things. <br className="hidden md:inline" />
-            <span className="text-stone">One house. One fire.</span>
+            <span className="text-stone">God&rsquo;s house. One accord.</span>
           </h2>
           <p className="text-stone max-w-[40rem] text-lg">
             In this season, New Heights is about three things — the same three you see in

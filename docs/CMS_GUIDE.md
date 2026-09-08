@@ -46,7 +46,7 @@ When you write an announcement, a testimony caption, or event description, use t
 - **Bold, scriptural, prophetic, family-oriented.** Not corporate, not "all welcome / warm smiles."
 - **Write like a church that expects God to show up.**
 - Examples we like:
-  - "Sundays, 10 AM. Come hungry." (not "Join us on Sundays at 10 AM")
+  - "Sundays, 10 AM. Come expectant." (not "Join us on Sundays at 10 AM")
   - "You were not built for less." (not "We want to help you grow")
 - For form labels, keep it plain. For headlines, lean prophetic and direct.
 

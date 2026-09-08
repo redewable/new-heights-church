@@ -8,7 +8,7 @@ import { MEDIA } from "@/lib/constants/media";
 /**
  * Home hero. Apostle Brian Hallam at the pulpit fills the frame; a scrim
  * keeps the left two-thirds readable for the copy. The opening line is the
- * sermon — "Come hungry. Leave carrying fire." Everything below answers a
+ * sermon — "Come expectant. Leave with fire." Everything below answers a
  * first-time guest's next questions in order: when, where, who leads.
  */
 export function Hero() {
@@ -35,9 +35,9 @@ export function Hero() {
           </div>
 
           <h1 className="u-display-dramatic text-cream u-rise u-rise-2 mt-8 max-w-[16ch] text-[clamp(2.75rem,6vw,5.75rem)]">
-            Come hungry.
+            Come expectant.
             <br />
-            <span className="text-[color:var(--nh-gold)]">Leave carrying fire.</span>
+            <span className="text-[color:var(--nh-gold)]">Leave with fire.</span>
           </h1>
 
           <p className="text-cream/90 u-rise u-rise-3 mt-7 max-w-[36rem] text-lg leading-relaxed md:text-xl">

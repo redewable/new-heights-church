@@ -46,7 +46,7 @@ sentences. Verbs carry the weight. Scripture earns its place.
 
 **Yes:**
 
-- "Sundays, 10 AM. Come hungry."
+- "Sundays, 10 AM. Come expectant."
 - "We are family. Welcome home."
 - "You were not built for less."
 - "Lost people are the agenda."
@@ -110,7 +110,7 @@ willing to say what it means.
 
 ### 1.5 Headline shapes that work
 
-- **Imperative + period.** _"Come hungry." "Bring a friend." "Answer the call."_
+- **Imperative + period.** _"Come expectant." "Bring a friend." "Answer the call."_
 - **Noun : noun.** _"Sundays: the altar." "Wednesday: the refill."_
 - **Negation + correction.** _"Not a visitation. A habitation."_
 - **List of three.** _"Saved. Baptized. Filled."_ Always three. Four reads like
@@ -589,7 +589,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 
 <SectionHeading
   kicker="What the house is about"
-  title="Three things. One house. One fire."
+  title="Three things. God's house. One accord."
   lead="A discipleship progression, not a preference."
 />;
 ```

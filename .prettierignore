@@ -9,3 +9,4 @@ pnpm-lock.yaml
 .env*
 public/brand/**
 supabase/migrations
+.claude

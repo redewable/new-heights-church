@@ -1,14 +1,14 @@
 import "server-only";
 
 import { supabaseServer } from "@/lib/supabase/server";
+import { guarded, requireFields, requireIsoDate } from "@/lib/supabase/guard";
 import type { EventRow, EventMinistry } from "@/lib/supabase/types";
 import { EVENT_FIXTURES } from "./fixtures";
 
 /**
- * Events query layer. Same pattern as sermons — Supabase when configured,
- * fixtures otherwise. `listEvents` and `getEventBySlug` are the public
- * surface; the others are convenience helpers for the home page and
- * /grow cross-links.
+ * Events query layer. Supabase when configured, fixtures otherwise — and
+ * fixtures again whenever Supabase errors or returns rows the UI can't
+ * render, so a CMS problem never becomes a 500 on the public site.
  */
 
 export interface EventFilters {
@@ -24,45 +24,84 @@ export interface EventListResult {
   source: "supabase" | "fixtures";
 }
 
-export async function listEvents(filters: EventFilters = {}): Promise<EventListResult> {
-  const db = await supabaseServer();
-  if (!db) return fixtureList(filters);
+const REQUIRED: ReadonlyArray<keyof EventRow> = [
+  "id",
+  "slug",
+  "title",
+  "start_at",
+  "published",
+];
 
-  const limit = filters.limit ?? 60;
-  let query = db.from("events").select("*", { count: "exact" }).eq("published", true);
+function assertEventRow(row: unknown): asserts row is EventRow {
+  requireFields<EventRow>(row, REQUIRED, "events");
+  requireIsoDate(row.start_at, "events.start_at");
+  if (row.end_at != null) requireIsoDate(row.end_at, "events.end_at");
+}
 
-  if (filters.ministry && filters.ministry !== "any") {
-    query = query.eq("ministry", filters.ministry);
-  }
-  if (filters.upcoming) {
-    query = query.gte("start_at", new Date().toISOString());
-  }
-
-  // Featured first, then chronological.
-  query = query
-    .order("featured", { ascending: false })
-    .order("start_at", { ascending: true });
-
-  const { data, count, error } = await query.limit(limit);
-  if (error) throw error;
+/** Fill columns added after the first schema so older rows still render. */
+function normalize(row: EventRow): EventRow {
   return {
-    events: (data ?? []) as EventRow[],
-    total: count ?? data?.length ?? 0,
-    source: "supabase",
+    ...row,
+    registration_status: row.registration_status ?? "open",
+    speakers: row.speakers ?? null,
+    poster_url: row.poster_url ?? null,
   };
 }
 
+export async function listEvents(filters: EventFilters = {}): Promise<EventListResult> {
+  return guarded(
+    "events.list",
+    async () => {
+      const db = await supabaseServer();
+      if (!db) return fixtureList(filters);
+
+      const limit = filters.limit ?? 60;
+      let query = db.from("events").select("*", { count: "exact" }).eq("published", true);
+
+      if (filters.ministry && filters.ministry !== "any") {
+        query = query.eq("ministry", filters.ministry);
+      }
+      if (filters.upcoming) {
+        query = query.gte("start_at", new Date().toISOString());
+      }
+
+      // Featured first, then chronological.
+      query = query
+        .order("featured", { ascending: false })
+        .order("start_at", { ascending: true });
+
+      const { data, count, error } = await query.limit(limit);
+      if (error) throw error;
+      const rows = (data ?? []).map((r) => {
+        assertEventRow(r);
+        return normalize(r);
+      });
+      return { events: rows, total: count ?? rows.length, source: "supabase" };
+    },
+    () => fixtureList(filters),
+  );
+}
+
 export async function getEventBySlug(slug: string): Promise<EventRow | null> {
-  const db = await supabaseServer();
-  if (!db) return EVENT_FIXTURES.find((e) => e.slug === slug) ?? null;
-  const { data, error } = await db
-    .from("events")
-    .select("*")
-    .eq("slug", slug)
-    .eq("published", true)
-    .maybeSingle();
-  if (error) throw error;
-  return (data as EventRow | null) ?? null;
+  const fromFixtures = () => EVENT_FIXTURES.find((e) => e.slug === slug) ?? null;
+  return guarded(
+    "events.bySlug",
+    async () => {
+      const db = await supabaseServer();
+      if (!db) return fromFixtures();
+      const { data, error } = await db
+        .from("events")
+        .select("*")
+        .eq("slug", slug)
+        .eq("published", true)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return null;
+      assertEventRow(data);
+      return normalize(data);
+    },
+    fromFixtures,
+  );
 }
 
 export async function listFeaturedEvents(limit = 3): Promise<EventRow[]> {

@@ -20,7 +20,7 @@ export function Convictions() {
           id="convictions-heading"
           className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]"
         >
-          Said plainly. Preached weekly.
+          Straight from the Bible!
         </h2>
 
         <ul className="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">

@@ -14,10 +14,13 @@ export function SermonPlayer({
   videoId,
   posterUrl,
   title,
+  kind = "sermon",
 }: {
   videoId: string;
   posterUrl: string | null;
   title: string;
+  /** What the button announces it plays — "sermon" or "episode". */
+  kind?: "sermon" | "episode";
 }) {
   const [active, setActive] = useState(false);
   const poster = posterUrl ?? youTubeThumbnailUrl(videoId);
@@ -41,7 +44,7 @@ export function SermonPlayer({
     <button
       type="button"
       onClick={() => setActive(true)}
-      aria-label={`Play sermon: ${title}`}
+      aria-label={`Play ${kind}: ${title}`}
       className="group bg-ink relative aspect-video w-full overflow-hidden rounded-[var(--radius-lg)] text-left"
     >
       <Image

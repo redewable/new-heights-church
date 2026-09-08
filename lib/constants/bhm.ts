@@ -10,6 +10,18 @@ export const BHM = {
   url: "https://brianhallam.com",
   youtube: "https://www.youtube.com/@brianhallamministries",
   youtubeHandle: "@brianhallamministries",
+  /** Resolved from the channel page for @brianhallamministries. */
+  youtubeChannelId: "UCIRtxjBNU3e8yRYVYpoyLOA",
+  facebook: "https://www.facebook.com/pastorbrianhallam/",
+  instagram: "https://www.instagram.com/brian_hallam/",
+  podcast: {
+    title: "The Brian Hallam Podcast",
+    apple: "https://podcasts.apple.com/us/podcast/the-brian-hallam-podcast/id1604967894",
+    appleShowId: "1604967894",
+    spotify: "https://open.spotify.com/show/7cYqeHSZDg5Dg0orFyHc5a",
+    /** Buzzsprout feed, as listed on Apple Podcasts. */
+    rss: "https://rss.buzzsprout.com/1919457.rss",
+  },
   tagline: "Apostolic. Prophetic. Unapologetic.",
   blurb:
     "Apostle Brian's preaching itinerary, teaching, the podcast, and his books — everything that orbits the pulpit beyond Sunday morning.",

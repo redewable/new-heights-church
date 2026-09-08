@@ -1,7 +1,9 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
 import { WordMark } from "@/components/brand/WordMark";
 import { AscendingBars } from "@/components/brand/AscendingBars";
+import { PlatformIcon, type Platform } from "@/components/brand/PlatformIcon";
 import { CHURCH, PILLAR_STRIP } from "@/lib/constants/church";
 import { BHM, BOOK } from "@/lib/constants/bhm";
 
@@ -9,6 +11,12 @@ interface FooterLink {
   label: string;
   href: string;
   external?: boolean;
+}
+
+interface SocialSpec {
+  platform: Platform;
+  href: string;
+  label: string;
 }
 
 const COL_CONNECT: ReadonlyArray<FooterLink> = [
@@ -39,10 +47,40 @@ const COL_DISCOVER: ReadonlyArray<FooterLink> = [
 
 const COL_BHM: ReadonlyArray<FooterLink> = [
   { label: "brianhallam.com", href: BHM.url, external: true },
-  { label: "YouTube", href: BHM.youtube, external: true },
   { label: BOOK.title, href: "/resources#book" },
-  { label: "The Brian Hallam Podcast", href: "/podcasts#brian-hallam-podcast" },
+  { label: BHM.podcast.title, href: "/podcasts#brian-hallam-podcast" },
   { label: "Resources", href: "/resources" },
+];
+
+/** Where Apostle Brian publishes — the podcast, the channel, and his own accounts. */
+const BHM_SOCIAL: ReadonlyArray<SocialSpec> = [
+  { platform: "youtube", href: BHM.youtube, label: `${BHM.name} on YouTube` },
+  {
+    platform: "apple",
+    href: BHM.podcast.apple,
+    label: `${BHM.podcast.title} on Apple Podcasts`,
+  },
+  {
+    platform: "spotify",
+    href: BHM.podcast.spotify,
+    label: `${BHM.podcast.title} on Spotify`,
+  },
+  { platform: "facebook", href: BHM.facebook, label: "Apostle Brian Hallam on Facebook" },
+  {
+    platform: "instagram",
+    href: BHM.instagram,
+    label: "Apostle Brian Hallam on Instagram",
+  },
+];
+
+const CHURCH_SOCIAL: ReadonlyArray<SocialSpec> = [
+  { platform: "facebook", href: CHURCH.urls.facebook, label: "New Heights on Facebook" },
+  {
+    platform: "instagram",
+    href: CHURCH.urls.instagram,
+    label: "New Heights on Instagram",
+  },
+  { platform: "youtube", href: CHURCH.urls.youtube, label: "New Heights on YouTube" },
 ];
 
 /**
@@ -114,7 +152,11 @@ export function Footer() {
           <FooterCol title="Connect" items={COL_CONNECT} />
           <FooterCol title="Grow" items={COL_GROW} />
           <FooterCol title="Discover" items={COL_DISCOVER} />
-          <FooterCol title={BHM.name} items={COL_BHM} />
+          <FooterCol
+            title={BHM.name}
+            items={COL_BHM}
+            after={<SocialRow items={BHM_SOCIAL} label={`${BHM.name} elsewhere`} />}
+          />
         </div>
       </Container>
 
@@ -153,23 +195,7 @@ export function Footer() {
             </li>
           </ul>
 
-          <ul className="flex items-center gap-2" aria-label="Social">
-            <li>
-              <SocialLink href={CHURCH.urls.facebook} label="New Heights on Facebook">
-                <FacebookIcon />
-              </SocialLink>
-            </li>
-            <li>
-              <SocialLink href={CHURCH.urls.instagram} label="New Heights on Instagram">
-                <InstagramIcon />
-              </SocialLink>
-            </li>
-            <li>
-              <SocialLink href={CHURCH.urls.youtube} label="New Heights on YouTube">
-                <YouTubeIcon />
-              </SocialLink>
-            </li>
-          </ul>
+          <SocialRow items={CHURCH_SOCIAL} label="Social" />
         </Container>
       </div>
     </footer>
@@ -179,9 +205,12 @@ export function Footer() {
 function FooterCol({
   title,
   items,
+  after,
 }: {
   title: string;
   items: ReadonlyArray<FooterLink>;
+  /** Anything that belongs under the links — the BHM column carries a social row. */
+  after?: ReactNode;
 }) {
   return (
     <div>
@@ -211,75 +240,36 @@ function FooterCol({
           </li>
         ))}
       </ul>
+      {after ? <div className="mt-5">{after}</div> : null}
     </div>
   );
 }
 
-function SocialLink({
-  href,
+function SocialRow({
+  items,
   label,
-  children,
 }: {
-  href: string;
+  items: ReadonlyArray<SocialSpec>;
   label: string;
-  children: React.ReactNode;
 }) {
   return (
-    <a
-      href={href}
-      aria-label={label}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-cream/70 hover:text-ink inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 transition-colors hover:border-[color:var(--nh-gold)] hover:bg-[color:var(--nh-gold)]"
-    >
-      {children}
-    </a>
-  );
-}
-
-function FacebookIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M24 12.07C24 5.44 18.63.07 12 .07S0 5.44 0 12.07c0 5.99 4.39 10.95 10.13 11.85v-8.38H7.08v-3.47h3.05V9.43c0-3.01 1.79-4.67 4.53-4.67 1.31 0 2.69.23 2.69.23v2.96h-1.51c-1.49 0-1.96.92-1.96 1.87v2.25h3.33l-.53 3.47h-2.8v8.38C19.61 23.02 24 18.06 24 12.07z" />
-    </svg>
-  );
-}
-
-function InstagramIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      <rect x="2.5" y="2.5" width="19" height="19" rx="5" />
-      <circle cx="12" cy="12" r="4.2" />
-      <circle cx="17.4" cy="6.6" r="1" fill="currentColor" stroke="none" />
-    </svg>
-  );
-}
-
-function YouTubeIcon() {
-  return (
-    <svg
-      aria-hidden="true"
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z" />
-    </svg>
+    <ul className="flex flex-wrap items-center gap-2" aria-label={label}>
+      {items.map((s) => (
+        <li key={s.platform}>
+          <a
+            href={s.href}
+            aria-label={s.label}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-cream/70 hover:text-ink inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/15 transition-colors hover:border-[color:var(--nh-gold)] hover:bg-[color:var(--nh-gold)]"
+          >
+            <PlatformIcon
+              platform={s.platform}
+              size={s.platform === "youtube" ? 18 : 16}
+            />
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -1,11 +1,17 @@
+import { BHM } from "./bhm";
 import { CHURCH } from "./church";
+import { MEDIA, type Photo } from "./media";
 
 /**
- * The two NHC podcasts. URLs + show IDs confirmed where we have them;
- * Apple show IDs + RSS feed URLs are PENDING (docs/OPEN_QUESTIONS.md #19).
- * The page renders with the outbound links we have now and gracefully
- * swaps in feed-parsed episodes once the IDs land.
+ * The two NHC podcasts. The Brian Hallam Podcast's Apple, Spotify, and RSS
+ * URLs are confirmed (see `BHM.podcast`); New Heights Sermons is YouTube
+ * only until its feed lands (docs/OPEN_QUESTIONS.md #19).
+ *
+ * "Latest episode" on the page is each show's newest YouTube upload, read
+ * from the channel feed — no API key, nothing for staff to update.
  */
+
+export type FollowPlatform = "facebook" | "instagram";
 
 export interface PodcastShow {
   slug: "new-heights-sermons" | "brian-hallam-podcast";
@@ -15,14 +21,22 @@ export interface PodcastShow {
   blurb: string;
   /** Apple Podcasts show URL (or null if TBD). */
   appleUrl: string | null;
-  /** Apple show id for embed (`https://embed.podcasts.apple.com/us/podcast/id{N}`). */
+  /** Apple show id (`https://podcasts.apple.com/.../id{N}`). */
   appleShowId: string | null;
   /** Spotify show URL. */
   spotifyUrl: string | null;
-  /** Canonical RSS feed. Parsed for latest episodes once wired. */
+  /** Canonical RSS feed. */
   rssUrl: string | null;
-  /** YouTube channel backing the audio side, if any. */
+  /** YouTube channel backing the video side, if any. */
   youtubeUrl: string | null;
+  /** Channel whose newest upload is the "latest episode" on the page. */
+  youtubeChannelId: string | null;
+  /** Show art. Holds the player slot if the channel feed can't be reached. */
+  cover: Photo | null;
+  /** The host's own accounts, shown under the platforms. */
+  follow: ReadonlyArray<{ platform: FollowPlatform; label: string; href: string }>;
+  /** Who the follow row is for — "Apostle Brian Hallam". */
+  followLabel: string | null;
 }
 
 export const PODCASTS: readonly PodcastShow[] = [
@@ -38,19 +52,30 @@ export const PODCASTS: readonly PodcastShow[] = [
     spotifyUrl: null,
     rssUrl: null,
     youtubeUrl: CHURCH.urls.youtube,
+    youtubeChannelId: CHURCH.urls.youtubeChannelId,
+    cover: MEDIA.pulpit,
+    follow: [],
+    followLabel: null,
   },
   {
     slug: "brian-hallam-podcast",
-    title: "The Brian Hallam Podcast",
+    title: BHM.podcast.title,
     hostedBy: CHURCH.leadership.seniorPastor,
     tagline: "Apostolic, prophetic, unapologetic — conversations on what God is doing.",
     blurb:
       "Apostle Brian Hallam's parallel podcast — longer-form conversations, teaching drops, and prophetic dialogue beyond Sunday morning. Part of Brian Hallam Ministries.",
-    appleUrl: null,
-    appleShowId: null,
-    spotifyUrl: null,
-    rssUrl: null,
-    youtubeUrl: CHURCH.urls.youtubeBhm,
+    appleUrl: BHM.podcast.apple,
+    appleShowId: BHM.podcast.appleShowId,
+    spotifyUrl: BHM.podcast.spotify,
+    rssUrl: BHM.podcast.rss,
+    youtubeUrl: BHM.youtube,
+    youtubeChannelId: BHM.youtubeChannelId,
+    cover: MEDIA.podcast,
+    follow: [
+      { platform: "facebook", label: "Facebook", href: BHM.facebook },
+      { platform: "instagram", label: "Instagram", href: BHM.instagram },
+    ],
+    followLabel: CHURCH.leadership.seniorPastor,
   },
 ];
 

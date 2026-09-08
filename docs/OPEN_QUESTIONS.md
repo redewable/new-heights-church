@@ -44,7 +44,7 @@ Questions for the Church that must be answered before certain phases can close. 
 ## P2 — Needed before Phase 5
 
 18. **Brian Hallam Ministries scope** — the RFP calls this a "parallel brand" and "linked destination." Confirm: are we building any pages for it on this site, or is every BHM mention an outbound link to `brianhallam.com`?
-19. **Podcasts** — confirm feed URLs for New Heights Sermons and The Brian Hallam Podcast. Do both go on one `/podcasts` hub or each on its own subpage?
+19. **Podcasts** — _Resolved 2026-09-08 for The Brian Hallam Podcast:_ Apple id 1604967894, Spotify show 7cYqeHSZDg5Dg0orFyHc5a, Buzzsprout RSS 1919457 (all in `lib/constants/bhm.ts`). One `/podcasts` hub; each show's latest episode is its channel's newest YouTube upload. _Still open:_ a feed for New Heights Sermons.
 20. **Resource Room** — confirm Phase 5 scope is outbound-link listings only (no on-site checkout). If e-commerce is wanted, that's a Phase 6+ add-on with Stripe + inventory + tax.
 
 ## P3 — Needed before launch (Phase 7)

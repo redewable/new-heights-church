@@ -1,10 +1,16 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, jsonLdScript } from "@/lib/seo/schema";
 import { Container } from "@/components/ui/Container";
-import { AscendingBars } from "@/components/brand/AscendingBars";
+import { PageHero } from "@/components/ui/PageHero";
+import { PlatformIcon, type Platform } from "@/components/brand/PlatformIcon";
+import { SermonPlayer } from "@/components/sermons/SermonPlayer";
 import { CHURCH } from "@/lib/constants/church";
+import { MEDIA, type Photo } from "@/lib/constants/media";
 import { PODCASTS, type PodcastShow } from "@/lib/constants/podcasts";
+import { getLatestUpload, type LatestUpload } from "@/lib/youtube/latest";
+import { formatDate } from "@/lib/utils/format";
 
 export const metadata: Metadata = buildMetadata({
   title: "Podcasts",
@@ -13,7 +19,7 @@ export const metadata: Metadata = buildMetadata({
   path: "/podcasts",
 });
 
-export default function PodcastsPage() {
+export default async function PodcastsPage() {
   const bc = breadcrumbSchema([
     { name: "Home", href: "/" },
     { name: "Podcasts", href: "/podcasts" },
@@ -30,6 +36,14 @@ export default function PodcastsPage() {
     url: `${CHURCH.urls.site}/podcasts#${p.slug}`,
   }));
 
+  // Newest upload per show, from each channel's public feed. Null on failure;
+  // the block falls back to the show's art.
+  const latest = await Promise.all(
+    PODCASTS.map((p) =>
+      p.youtubeChannelId ? getLatestUpload(p.youtubeChannelId) : Promise.resolve(null),
+    ),
+  );
+
   return (
     <>
       <script
@@ -44,27 +58,20 @@ export default function PodcastsPage() {
         />
       ))}
 
-      <section className="u-grain-ink bg-ink text-cream relative overflow-hidden">
-        <Container size="xl" className="u-hero-mark relative py-20 md:py-28">
-          <div className="flex items-center gap-3 text-[color:var(--nh-gold)]">
-            <AscendingBars size={20} aria-label="" />
-            <span className="u-eyebrow">Listen any time</span>
-          </div>
-          <h1 className="u-display-dramatic text-cream mt-7 max-w-[16ch] text-[clamp(2.75rem,6.5vw,6rem)]">
-            Podcasts.
-          </h1>
-          <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
-            The Sunday word and the longer-form conversations — on the platforms you
-            already use.
-          </p>
-        </Container>
-      </section>
+      <PageHero
+        eyebrow="Listen any time"
+        title="Podcasts."
+        lead="The Sunday word and the longer-form conversations — on the platforms you already use."
+        photo={MEDIA.podcast}
+        photoPosition="68% 30%"
+        size="lg"
+      />
 
       <section className="py-10 md:py-14">
         <Container size="xl">
           <div className="divide-y divide-[color:var(--nh-border)]">
-            {PODCASTS.map((p) => (
-              <ShowBlock key={p.slug} show={p} />
+            {PODCASTS.map((p, i) => (
+              <ShowBlock key={p.slug} show={p} latest={latest[i] ?? null} />
             ))}
           </div>
         </Container>
@@ -73,14 +80,20 @@ export default function PodcastsPage() {
   );
 }
 
-function ShowBlock({ show }: { show: PodcastShow }) {
-  const platforms = [
-    { label: "Apple Podcasts", href: show.appleUrl },
-    { label: "Spotify", href: show.spotifyUrl },
-    { label: "RSS feed", href: show.rssUrl },
-    { label: "YouTube", href: show.youtubeUrl },
+interface PlatformLink {
+  platform: Platform;
+  label: string;
+  href: string | null;
+}
+
+function ShowBlock({ show, latest }: { show: PodcastShow; latest: LatestUpload | null }) {
+  const platforms: PlatformLink[] = [
+    { platform: "apple", label: "Apple Podcasts", href: show.appleUrl },
+    { platform: "spotify", label: "Spotify", href: show.spotifyUrl },
+    { platform: "youtube", label: "YouTube", href: show.youtubeUrl },
+    { platform: "rss", label: "RSS feed", href: show.rssUrl },
   ];
-  const live = platforms.filter((p): p is { label: string; href: string } =>
+  const live = platforms.filter((p): p is PlatformLink & { href: string } =>
     Boolean(p.href),
   );
   const pending = platforms.filter((p) => !p.href).map((p) => p.label);
@@ -102,45 +115,45 @@ function ShowBlock({ show }: { show: PodcastShow }) {
 
         <div className="mt-8 flex flex-wrap gap-3">
           {live.map((p) => (
-            <a
-              key={p.label}
+            <PlatformPill
+              key={p.platform}
+              platform={p.platform}
+              label={p.label}
               href={p.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-ink bg-paper inline-flex h-11 items-center rounded-[var(--radius-sm)] border border-[color:var(--nh-border)] px-4 text-sm font-semibold hover:border-[color:var(--nh-ink)]"
-            >
-              {p.label}
-              <span aria-hidden="true" className="ml-2">
-                ↗
-              </span>
-            </a>
+            />
           ))}
         </div>
         {pending.length > 0 ? (
           <p className="text-fog mt-4 text-sm">{joinList(pending)} coming soon.</p>
         ) : null}
+
+        {show.follow.length > 0 ? (
+          <div className="mt-8 border-t border-[color:var(--nh-border)] pt-6">
+            <p className="u-eyebrow text-fog">Follow {show.followLabel ?? "the host"}</p>
+            <div className="mt-3 flex flex-wrap gap-3">
+              {show.follow.map((f) => (
+                <PlatformPill
+                  key={f.platform}
+                  platform={f.platform}
+                  label={f.label}
+                  href={f.href}
+                />
+              ))}
+            </div>
+          </div>
+        ) : null}
       </div>
 
-      <aside className="flex flex-col gap-3">
-        {show.appleShowId ? (
-          <div className="bg-paper overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--nh-border)]">
-            <iframe
-              allow="autoplay *; encrypted-media *; fullscreen *"
-              height={175}
-              title={`${show.title} · latest episode`}
-              src={`https://embed.podcasts.apple.com/us/podcast/id${show.appleShowId}?itsct=podcast_box&itscg=30200&theme=light`}
-              className="h-[175px] w-full"
-              sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation-by-user-activation"
-            />
-          </div>
+      <aside className="flex flex-col gap-4">
+        {latest ? (
+          <LatestEpisode latest={latest} />
+        ) : show.cover ? (
+          <CoverCard show={show} cover={show.cover} />
         ) : (
           <div className="motif-altar-glow rounded-[var(--radius-lg)] border border-dashed border-[color:var(--nh-border)] bg-[color:var(--nh-bone)] p-8 text-center md:p-10">
             <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">Latest episode</p>
             <p className="text-ink u-display-soft mt-4 text-xl leading-snug">
-              The player lands here once the show is live on Apple Podcasts.
-            </p>
-            <p className="text-fog mt-4 text-sm">
-              Until then, every episode is on the platforms above.
+              The latest episode lands here once the show is on YouTube.
             </p>
           </div>
         )}
@@ -150,6 +163,106 @@ function ShowBlock({ show }: { show: PodcastShow }) {
         </p>
       </aside>
     </article>
+  );
+}
+
+/** Newest upload from the show's channel: date, click-to-load player, title. */
+function LatestEpisode({ latest }: { latest: LatestUpload }) {
+  const watchUrl = `https://www.youtube.com/watch?v=${latest.videoId}`;
+  return (
+    <div>
+      <div className="flex items-baseline justify-between gap-4">
+        <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">Latest on YouTube</p>
+        <p className="text-fog text-sm whitespace-nowrap">
+          {formatDate(latest.publishedAt.slice(0, 10))}
+        </p>
+      </div>
+      <div className="mt-4">
+        <SermonPlayer
+          videoId={latest.videoId}
+          posterUrl={null}
+          title={latest.title}
+          kind="episode"
+        />
+      </div>
+      <h3 className="u-display-soft text-ink mt-4 text-lg leading-snug md:text-xl">
+        {latest.title}
+      </h3>
+      <a
+        href={watchUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-ink mt-2 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline"
+      >
+        <PlatformIcon platform="youtube" size={16} />
+        Open on YouTube
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  );
+}
+
+/** Fallback when the channel feed can't be reached: the show's art, linked to YouTube. */
+function CoverCard({ show, cover }: { show: PodcastShow; cover: Photo }) {
+  const frame =
+    "group bg-ink block overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--nh-border)]";
+  const body = (
+    <>
+      <div className="aspect-video overflow-hidden">
+        <Image
+          src={cover.src}
+          alt={cover.alt}
+          width={cover.width}
+          height={cover.height}
+          sizes="(min-width: 768px) 52vw, 100vw"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+        />
+      </div>
+      <div className="bg-paper flex items-center justify-between gap-4 border-t border-[color:var(--nh-border)] px-5 py-3.5">
+        <span className="u-eyebrow text-[color:var(--nh-gold-ink)]">Latest episodes</span>
+        {show.youtubeUrl ? (
+          <span className="text-ink text-sm font-semibold whitespace-nowrap">
+            Watch on YouTube <span aria-hidden="true">↗</span>
+          </span>
+        ) : null}
+      </div>
+    </>
+  );
+
+  return show.youtubeUrl ? (
+    <a
+      href={show.youtubeUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${show.title} on YouTube`}
+      className={frame}
+    >
+      {body}
+    </a>
+  ) : (
+    <div className={frame}>{body}</div>
+  );
+}
+
+function PlatformPill({
+  platform,
+  label,
+  href,
+}: {
+  platform: Platform;
+  label: string;
+  href: string;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-ink bg-paper inline-flex h-11 items-center gap-2.5 rounded-[var(--radius-sm)] border border-[color:var(--nh-border)] px-4 text-sm font-semibold transition-colors hover:border-[color:var(--nh-ink)]"
+    >
+      <PlatformIcon platform={platform} size={18} />
+      {label}
+    </a>
   );
 }
 

@@ -46,6 +46,13 @@ export const MEDIA = {
     width: 2085,
     height: 1266,
   },
+  /** Key art for The Brian Hallam Podcast — Apostle Hallam at the studio mic. */
+  podcast: {
+    src: `${BHM_UPLOADS}/2026-Graphics-The-Brian-Hallam-Podcast-Intro-Graphic.webp`,
+    alt: "The Brian Hallam Podcast — Apostle Brian Hallam at the studio microphone",
+    width: 1920,
+    height: 1080,
+  },
   /** Architectural rendering of the New Heights campus — the mark on the tower. */
   campus: {
     src: "https://newheightschurch.info/wp-content/uploads/2020/10/IMG_9142-scaled.jpg",

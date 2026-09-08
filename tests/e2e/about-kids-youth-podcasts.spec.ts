@@ -78,18 +78,29 @@ test.describe("Young Lions + Youth Army — Phase 5a smoke", () => {
 });
 
 test.describe("Podcasts + Resources — Phase 5a smoke", () => {
-  test("/podcasts lists both shows with PodcastSeries JSON-LD", async ({ page }) => {
+  test("/podcasts presents The Brian Hallam Podcast with its platforms and JSON-LD", async ({
+    page,
+  }) => {
     await page.goto("/podcasts");
     await expect(
       page.getByRole("heading", { level: 1, name: /^Podcasts/i }),
     ).toBeVisible();
-    // Both show headings (h2 inside sections)
+    // The one show on the hub (the Sunday word lives on /sermons and /watch).
     await expect(
-      page.getByRole("heading", { name: /New Heights Sermons/i }),
+      page.getByRole("heading", { level: 2, name: /Brian Hallam Podcast/i }),
     ).toBeVisible();
-    await expect(
-      page.getByRole("heading", { name: /Brian Hallam Podcast/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("heading", { name: /New Heights Sermons/i })).toHaveCount(
+      0,
+    );
+    // Confirmed platform links carry their marks and real destinations.
+    await expect(page.getByRole("link", { name: /^Apple Podcasts$/ })).toHaveAttribute(
+      "href",
+      /podcasts\.apple\.com\/.*id1604967894/,
+    );
+    await expect(page.getByRole("link", { name: /^Spotify$/ })).toHaveAttribute(
+      "href",
+      /open\.spotify\.com\/show\/7cYqeHSZDg5Dg0orFyHc5a/,
+    );
     // JSON-LD
     const blocks = await page
       .locator('script[type="application/ld+json"]')

@@ -15,7 +15,7 @@ import { formatDate } from "@/lib/utils/format";
 export const metadata: Metadata = buildMetadata({
   title: "Podcasts",
   description:
-    "Listen to New Heights Sermons and The Brian Hallam Podcast — available on Apple Podcasts, Spotify, and RSS.",
+    "The Brian Hallam Podcast — Apostle Brian Hallam's conversations on what God is doing, on Apple Podcasts, Spotify, YouTube, and RSS.",
   path: "/podcasts",
 });
 
@@ -61,9 +61,9 @@ export default async function PodcastsPage() {
       <PageHero
         eyebrow="Listen any time"
         title="Podcasts."
-        lead="The Sunday word and the longer-form conversations — on the platforms you already use."
+        lead="The longer-form conversations with Apostle Brian Hallam — on the platforms you already use."
         photo={MEDIA.podcast}
-        photoPosition="68% 30%"
+        photoPosition="70% 24%"
         size="lg"
       />
 

@@ -3,18 +3,18 @@ import { CHURCH } from "./church";
 import { MEDIA, type Photo } from "./media";
 
 /**
- * The two NHC podcasts. The Brian Hallam Podcast's Apple, Spotify, and RSS
- * URLs are confirmed (see `BHM.podcast`); New Heights Sermons is YouTube
- * only until its feed lands (docs/OPEN_QUESTIONS.md #19).
+ * The podcast hub lists one show: The Brian Hallam Podcast. Its Apple,
+ * Spotify, and RSS URLs are confirmed (see `BHM.podcast`). The Sunday word
+ * lives on /sermons and /watch, not here (decided 2026-09-08).
  *
- * "Latest episode" on the page is each show's newest YouTube upload, read
+ * "Latest episode" on the page is the show's newest YouTube upload, read
  * from the channel feed — no API key, nothing for staff to update.
  */
 
 export type FollowPlatform = "facebook" | "instagram";
 
 export interface PodcastShow {
-  slug: "new-heights-sermons" | "brian-hallam-podcast";
+  slug: "brian-hallam-podcast";
   title: string;
   hostedBy: string;
   tagline: string;
@@ -40,23 +40,6 @@ export interface PodcastShow {
 }
 
 export const PODCASTS: readonly PodcastShow[] = [
-  {
-    slug: "new-heights-sermons",
-    title: "New Heights Sermons",
-    hostedBy: `${CHURCH.leadership.seniorPastor} + NHC pulpit`,
-    tagline: "Every Sunday word — carried with you.",
-    blurb:
-      "The weekly sermon from New Heights Church. Every word preached from the pulpit, released as audio so the teaching travels past the room.",
-    appleUrl: null,
-    appleShowId: null,
-    spotifyUrl: null,
-    rssUrl: null,
-    youtubeUrl: CHURCH.urls.youtube,
-    youtubeChannelId: CHURCH.urls.youtubeChannelId,
-    cover: MEDIA.pulpit,
-    follow: [],
-    followLabel: null,
-  },
   {
     slug: "brian-hallam-podcast",
     title: BHM.podcast.title,

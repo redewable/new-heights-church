@@ -1,26 +1,476 @@
 @import "tailwindcss";
 
+/* ===========================================================
+   NEW HEIGHTS CHURCH — BRAND TOKENS
+   -----------------------------------------------------------
+   The canvas is calm (cream + ink navy).
+   The accents preach — the colors of Scripture and the
+   tabernacle:
+     blue / tekhelet   (heaven, the veil)
+     purple / argaman  (royalty, the Bride)
+     scarlet / tola'ath shani (the blood, atonement)
+     white / laban     (light, purity — our cream canvas)
+     gold              (glory, the mercy seat)
+     silver            (redemption)
+   Bronze is the outer-court supporting metal — used sparingly.
+
+   See docs/BRAND.md for scriptural references and usage.
+
+   LAYERING: every element rule below lives in `@layer base` and
+   every house utility in `@layer components`, so Tailwind's
+   utilities (which sit in the `utilities` layer) always win.
+   Unlayered element rules would silently beat `text-cream`,
+   `text-xs`, `leading-*`, etc. — that bug once made every hero
+   title on an ink background invisible. Keep it layered.
+   =========================================================== */
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ---------- Canvas ---------- */
+  --nh-ink: #0b1b2b;
+  --nh-ink-2: #13293f;
+  --nh-ink-deep: #07121d;
+  --nh-cream: #faf7f1;
+  --nh-paper: #ffffff;
+  --nh-bone: #eee8dc;
+  --nh-border: #e5ded0;
+
+  /* ---------- Scripture accent palette ---------- */
+  /* Blue — tekhelet. The veil, heaven touching earth. Exodus 26:31 */
+  --nh-blue: #1d4f8b;
+  --nh-blue-ink: #0f2d55;
+  --nh-blue-soft: #d9e4f2;
+
+  /* Purple — argaman. Royalty, the Bride's covenant. Judges 8:26 */
+  --nh-purple: #5b2a86;
+  --nh-purple-ink: #36175a;
+  --nh-purple-soft: #e4d8ef;
+
+  /* Scarlet — tola'ath shani. The blood, the crimson thread. Joshua 2:18 */
+  --nh-scarlet: #9b1c2e;
+  --nh-scarlet-ink: #6a101f;
+  --nh-scarlet-soft: #f1d6db;
+
+  /* Gold — glory, the mercy seat, the lampstand. Decision moments */
+  --nh-gold: #c9a227;
+  --nh-gold-ink: #8f7115;
+  --nh-gold-soft: #f2e7c1;
+
+  /* Silver — the redemption price. Pricing, giving emphasis */
+  --nh-silver: #9aa4ad;
+  --nh-silver-ink: #5b6770;
+  --nh-silver-soft: #e7ebee;
+
+  /* Bronze — outer court, altar of sacrifice. Borders, archive. Sparingly. */
+  --nh-bronze: #8a5a2b;
+  --nh-bronze-ink: #5a3818;
+  --nh-bronze-soft: #eadac3;
+
+  /* ---------- Pillars ---------- */
+  --nh-harvest: var(--nh-scarlet);
+  --nh-bride: var(--nh-purple);
+  --nh-habitation: var(--nh-blue);
+
+  /* ---------- Supporting neutrals ---------- */
+  --nh-stone: #3a4654;
+  --nh-fog: #7e8a99;
+
+  /* ---------- Semantic aliases ---------- */
+  --bg: var(--nh-cream);
+  --fg: var(--nh-ink);
+  --muted: var(--nh-stone);
+  --accent: var(--nh-gold);
+  --border: var(--nh-border);
+  --success: #2f6f3e;
+  --danger: #9b2226;
+
+  /* ---------- Radii ---------- */
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 14px;
+  --radius-xl: 22px;
+
+  /* ---------- Motion ---------- */
+  --ease-rise: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur: 250ms;
+  --dur-slow: 500ms;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  --color-ink: var(--nh-ink);
+  --color-ink-2: var(--nh-ink-2);
+  --color-cream: var(--nh-cream);
+  --color-paper: var(--nh-paper);
+  --color-bone: var(--nh-bone);
+
+  --color-blue-tab: var(--nh-blue);
+  --color-blue-tab-ink: var(--nh-blue-ink);
+  --color-blue-tab-soft: var(--nh-blue-soft);
+
+  --color-purple-tab: var(--nh-purple);
+  --color-purple-tab-ink: var(--nh-purple-ink);
+  --color-purple-tab-soft: var(--nh-purple-soft);
+
+  --color-scarlet: var(--nh-scarlet);
+  --color-scarlet-ink: var(--nh-scarlet-ink);
+  --color-scarlet-soft: var(--nh-scarlet-soft);
+
+  --color-gold-tab: var(--nh-gold);
+  --color-gold-tab-ink: var(--nh-gold-ink);
+  --color-gold-tab-soft: var(--nh-gold-soft);
+
+  --color-silver-tab: var(--nh-silver);
+  --color-silver-tab-ink: var(--nh-silver-ink);
+  --color-silver-tab-soft: var(--nh-silver-soft);
+
+  --color-bronze-tab: var(--nh-bronze);
+  --color-bronze-tab-ink: var(--nh-bronze-ink);
+  --color-bronze-tab-soft: var(--nh-bronze-soft);
+
+  --color-harvest: var(--nh-harvest);
+  --color-bride: var(--nh-bride);
+  --color-habitation: var(--nh-habitation);
+
+  --color-stone: var(--nh-stone);
+  --color-fog: var(--nh-fog);
+
+  --color-border: var(--nh-border);
+
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, "SFMono-Regular", monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ===========================================================
+   BASE — element defaults. Layered so utilities override.
+   =========================================================== */
+@layer base {
+  html,
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    min-height: 100dvh;
+    line-height: 1.55;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.08;
+    color: var(--fg);
+    text-wrap: balance;
+  }
+
+  h1 {
+    font-size: clamp(2.25rem, 1.2rem + 4vw, 4.75rem);
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    font-size: clamp(1.75rem, 1rem + 2.6vw, 3rem);
+    letter-spacing: -0.015em;
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 0.9rem + 1.2vw, 1.875rem);
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  /* Selects: drop the OS chrome, keep the input shell, add a gold chevron.
+     Utilities still win (this is the base layer), so a page can restyle. */
+  select {
+    appearance: none;
+    -webkit-appearance: none;
+    color-scheme: light;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 8l5 5 5-5' stroke='%238f7115' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    background-size: 1rem 1rem;
+    padding-right: 2.75rem;
+  }
+  select:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  select option {
+    color: var(--nh-ink);
+    background: var(--nh-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--nh-gold);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: var(--nh-gold);
+    color: var(--nh-ink);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===========================================================
+   HOUSE UTILITIES — `.u-*` and `.motif-*`
+   Layered as components so a Tailwind utility can still
+   override a single property when a page needs to.
+   =========================================================== */
+@layer components {
+  /* ---------- Eyebrow ----------
+     THE label style. Inter, uppercase, tracked, 12px. Used for
+     section kickers, metadata labels, chip text. One class, one
+     size — never hand-roll `text-[11px]` again. */
+  .u-eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    line-height: 1.25;
+  }
+
+  /* ---------- Fraunces axis utilities ----------
+     Fraunces is a variable serif with two expressive axes we use:
+       opsz (9–144)   — larger values at display sizes
+       SOFT (0–100)   — softer terminals at 100 for warmth
+     Reach for these at display sizes, not at body. */
+  .u-display-soft {
+    font-family: var(--font-display);
+    font-variation-settings:
+      "opsz" 144,
+      "SOFT" 100;
+    letter-spacing: -0.02em;
+  }
+
+  .u-display-dramatic {
+    font-family: var(--font-display);
+    font-variation-settings:
+      "opsz" 144,
+      "SOFT" 60;
+    letter-spacing: -0.03em;
+    line-height: 0.98;
+  }
+
+  .u-numeral {
+    font-family: var(--font-display);
+    font-feature-settings:
+      "onum" 1,
+      "lnum" 0;
+    font-variation-settings: "opsz" 144;
+    font-weight: 500;
+    letter-spacing: -0.04em;
+    line-height: 1;
+  }
+
+  /* True small caps. Fraunces carries the smcp/c2sc glyphs; Inter
+     does not, which is why this is display-only. For everyday
+     labels use `.u-eyebrow`. */
+  .u-smallcaps {
+    font-family: var(--font-display);
+    font-feature-settings:
+      "c2sc" 1,
+      "smcp" 1;
+    text-transform: lowercase;
+    letter-spacing: 0.16em;
+  }
+
+  /* A horizontal gold hairline used as a chapter marker. */
+  .u-rule-gold {
+    height: 1px;
+    background: color-mix(in oklab, var(--nh-gold) 70%, transparent);
+  }
+
+  /* ---------- Ink canvas ----------
+     Full-bleed ink sections. A single, quiet directional gradient
+     from ink-2 into deep ink — no blurry color washes. Put a photo
+     inside with `.u-scrim-photo` when there is one. */
+  .u-grain-ink {
+    position: relative;
+    isolation: isolate;
+    background-color: var(--nh-ink);
+    background-image: linear-gradient(
+      165deg,
+      var(--nh-ink-2) 0%,
+      var(--nh-ink) 48%,
+      var(--nh-ink-deep) 100%
+    );
+  }
+
+  /* ---------- Hero mark ----------
+     For ink heroes without a photo: the three-bar mark in the pillar
+     colors, large and ghosted on the right, so the copy has a
+     counterweight instead of dead space. Hidden on phones where the
+     copy spans the width. */
+  .u-hero-mark::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: clamp(1.25rem, 3vw, 3rem);
+    height: min(72%, 22rem);
+    aspect-ratio: 95 / 123;
+    transform: translateY(-50%);
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 95 123'%3E%3Crect x='0' y='63' width='20' height='60' rx='2' fill='%239b1c2e'/%3E%3Crect x='25' y='40' width='25' height='83' rx='2' fill='%235b2a86'/%3E%3Crect x='55' y='0' width='40' height='123' rx='2' fill='%231d4f8b'/%3E%3C/svg%3E")
+      no-repeat center / contain;
+    opacity: 0.32;
+    pointer-events: none;
+    z-index: -1;
+  }
+  @media (max-width: 767px) {
+    .u-hero-mark::before {
+      display: none;
+    }
+  }
+
+  /* ---------- Photo scrim ----------
+     Wrap a `fill` image in an absolutely-positioned box with this
+     class. The pseudo-element darkens the left (where copy sits)
+     and the bottom, and leaves the subject on the right readable.
+     On phones the copy sits over the whole photo, so the scrim
+     becomes a vertical fade into ink. */
+  .u-scrim-photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(
+        90deg,
+        color-mix(in oklab, var(--nh-ink) 96%, transparent) 0%,
+        color-mix(in oklab, var(--nh-ink) 92%, transparent) 40%,
+        color-mix(in oklab, var(--nh-ink) 62%, transparent) 68%,
+        color-mix(in oklab, var(--nh-ink) 30%, transparent) 100%
+      ),
+      linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--nh-ink) 30%, transparent) 0%,
+        transparent 30%,
+        color-mix(in oklab, var(--nh-ink) 70%, transparent) 100%
+      );
+  }
+  @media (max-width: 767px) {
+    .u-scrim-photo::after {
+      background: linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--nh-ink) 60%, transparent) 0%,
+        color-mix(in oklab, var(--nh-ink) 88%, transparent) 55%,
+        var(--nh-ink) 100%
+      );
+    }
+  }
+
+  /* ---------- Framed photo ----------
+     A photo with a gold hairline frame offset from its edge — the
+     one flourish we allow ourselves on portraits. */
+  .u-frame-gold {
+    position: relative;
+  }
+  .u-frame-gold::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translate(12px, 12px);
+    border: 1px solid color-mix(in oklab, var(--nh-gold) 80%, transparent);
+    border-radius: inherit;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ---------- Entrance ----------
+     A short rise for hero content. Respects reduced motion via the
+     global media query above. */
+  @keyframes nh-rise {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .u-rise {
+    animation: nh-rise var(--dur-slow) var(--ease-rise) both;
+  }
+  .u-rise-2 {
+    animation-delay: 90ms;
+  }
+  .u-rise-3 {
+    animation-delay: 180ms;
+  }
+  .u-rise-4 {
+    animation-delay: 270ms;
+  }
+
+  /* Emails wrap at any character — a long address must never
+     push a two-column grid off the phone screen. */
+  .u-break-anywhere {
+    overflow-wrap: anywhere;
+  }
+
+  /* ---------- Skip link ---------- */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    background: var(--nh-ink);
+    color: var(--nh-cream);
+    border-radius: 0 0 var(--radius) 0;
+    font-weight: 600;
+  }
+  .skip-link:focus-visible {
+    left: 0;
+  }
+
+  /* ---------- Motif: altar glow ----------
+     A radial gold wash behind decision and testimony blocks.
+     Clipped to the host's box. */
+  .motif-altar-glow {
+    position: relative;
+    isolation: isolate;
+    overflow-x: clip;
+  }
+  .motif-altar-glow::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 80%;
+    background: radial-gradient(
+      ellipse 70% 60% at 50% 15%,
+      color-mix(in oklab, var(--nh-gold) 30%, transparent) 0%,
+      transparent 65%
+    );
+    z-index: -1;
+    pointer-events: none;
+  }
 }

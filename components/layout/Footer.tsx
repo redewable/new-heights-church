@@ -46,6 +46,7 @@ const COL_DISCOVER: ReadonlyArray<FooterLink> = [
 ];
 
 const COL_BHM: ReadonlyArray<FooterLink> = [
+  { label: "About the ministry", href: "/about/brian-hallam-ministries" },
   { label: "brianhallam.com", href: BHM.url, external: true },
   { label: BOOK.title, href: "/resources#book" },
   { label: BHM.podcast.title, href: "/podcasts#brian-hallam-podcast" },

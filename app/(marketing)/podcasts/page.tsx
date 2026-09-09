@@ -5,6 +5,7 @@ import { breadcrumbSchema, jsonLdScript } from "@/lib/seo/schema";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
 import { PlatformIcon, type Platform } from "@/components/brand/PlatformIcon";
+import { PlatformPill } from "@/components/ui/PlatformPill";
 import { SermonPlayer } from "@/components/sermons/SermonPlayer";
 import { CHURCH } from "@/lib/constants/church";
 import { MEDIA, type Photo } from "@/lib/constants/media";
@@ -241,28 +242,6 @@ function CoverCard({ show, cover }: { show: PodcastShow; cover: Photo }) {
     </a>
   ) : (
     <div className={frame}>{body}</div>
-  );
-}
-
-function PlatformPill({
-  platform,
-  label,
-  href,
-}: {
-  platform: Platform;
-  label: string;
-  href: string;
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-ink bg-paper inline-flex h-11 items-center gap-2.5 rounded-[var(--radius-sm)] border border-[color:var(--nh-border)] px-4 text-sm font-semibold transition-colors hover:border-[color:var(--nh-ink)]"
-    >
-      <PlatformIcon platform={platform} size={18} />
-      {label}
-    </a>
   );
 }
 

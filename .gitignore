@@ -43,3 +43,7 @@ next-env.d.ts
 # claude code (local, per-machine)
 .claude/settings.local.json
 .claude/launch.json
+
+# playwright output
+/test-results/
+/playwright-report/

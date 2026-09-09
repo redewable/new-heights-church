@@ -28,6 +28,27 @@ export const CHURCH = {
   leadership: {
     seniorPastor: "Apostle Brian Hallam",
     firstLady: "Pastor Crystal Hallam",
+    /**
+     * The ministry team, in the order the Church gave it (couples stay
+     * together). `office` is the fivefold office; it always travels with
+     * the name — "Prophet Larry Hallam", never "Larry". Four are listed by
+     * first name only until the Church supplies surnames.
+     */
+    team: [
+      { office: "Prophet", name: "Larry Hallam" },
+      { office: "Pastor", name: "Candy Hallam" },
+      { office: "Pastor", name: "Sherdonna Bragg" },
+      { office: "Pastor", name: "Jake Remmert" },
+      { office: "Teacher", name: "Teresa Remmert" },
+      { office: "Prophet", name: "John Alaniz" },
+      { office: "Teacher", name: "Irma Alaniz" },
+      { office: "Teacher", name: "Michael" },
+      { office: "Teacher", name: "Jennifer" },
+      { office: "Pastor", name: "Robert Garcia" },
+      { office: "Pastor", name: "Marci Garcia" },
+      { office: "Teacher", name: "Lacresha" },
+      { office: "Teacher", name: "John" },
+    ],
   },
 
   address: {
@@ -206,3 +227,18 @@ export const PILLAR_SEPARATOR = " • ";
 
 /** "Endtime Harvest • Preparation • Habitation" — the strip under the mark. */
 export const PILLAR_STRIP = CHURCH.pillars.map((p) => p.label).join(PILLAR_SEPARATOR);
+
+export type Minister = (typeof CHURCH.leadership.team)[number];
+export type MinistryOffice = Minister["office"];
+
+/** The fivefold office, as a label for a roster card. */
+export const OFFICE_LABEL: Record<MinistryOffice, string> = {
+  Prophet: "Prophetic office",
+  Pastor: "Pastoral office",
+  Teacher: "Teaching office",
+};
+
+/** "Prophet Larry Hallam" — the office always travels with the name. */
+export function leaderName(m: Minister): string {
+  return `${m.office} ${m.name}`;
+}

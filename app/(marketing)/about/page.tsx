@@ -7,6 +7,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/ui/PageHero";
 import { CHURCH, PILLAR_STRIP } from "@/lib/constants/church";
+import { BHM } from "@/lib/constants/bhm";
 import { MEDIA } from "@/lib/constants/media";
 import { PURPOSE } from "@/lib/constants/values";
 
@@ -26,7 +27,12 @@ const LINKS = [
   {
     title: "Our leadership",
     href: "/about/leadership",
-    blurb: `${CHURCH.leadership.seniorPastor} and ${CHURCH.leadership.firstLady}, and the elders and staff who carry the house alongside them.`,
+    blurb: `${CHURCH.leadership.seniorPastor} and ${CHURCH.leadership.firstLady}, and the prophets, pastors, and teachers who carry the house alongside them.`,
+  },
+  {
+    title: BHM.name,
+    href: "/about/brian-hallam-ministries",
+    blurb: `${CHURCH.leadership.seniorPastor}'s parallel ministry — the podcast, the YouTube channel, the book, and where to follow him.`,
   },
   {
     title: "Plan a visit",
@@ -161,9 +167,9 @@ export default function AboutHubPage() {
         <Container size="xl">
           <div className="flex items-center gap-4 text-[color:var(--nh-gold-ink)]">
             <span aria-hidden="true" className="u-rule-gold w-12" />
-            <span className="u-eyebrow">Three rooms to explore</span>
+            <span className="u-eyebrow">Four rooms to explore</span>
           </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-3 md:gap-8">
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 md:gap-8 lg:grid-cols-4">
             {LINKS.map((l) => (
               <Link
                 key={l.href}

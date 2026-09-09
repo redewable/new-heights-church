@@ -45,6 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/about", priority: 0.7, frequency: "monthly" },
     { path: "/about/beliefs", priority: 0.6, frequency: "yearly" },
     { path: "/about/leadership", priority: 0.6, frequency: "monthly" },
+    { path: "/about/brian-hallam-ministries", priority: 0.6, frequency: "monthly" },
     { path: "/about/visit", priority: 0.7, frequency: "monthly" },
     { path: "/resources", priority: 0.6, frequency: "monthly" },
     { path: "/legal/privacy", priority: 0.4, frequency: "yearly" },

@@ -5,21 +5,21 @@ import { buildMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, jsonLdScript } from "@/lib/seo/schema";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
-import { CHURCH } from "@/lib/constants/church";
+import { CHURCH, OFFICE_LABEL, leaderName } from "@/lib/constants/church";
 import { BHM, BOOK } from "@/lib/constants/bhm";
 import { MEDIA, type Photo } from "@/lib/constants/media";
 
 export const metadata: Metadata = buildMetadata({
   title: "Leadership",
-  description: `${CHURCH.leadership.seniorPastor} and ${CHURCH.leadership.firstLady}, and the elders and staff who carry New Heights Church alongside them.`,
+  description: `${CHURCH.leadership.seniorPastor} and ${CHURCH.leadership.firstLady}, and the prophets, pastors, and teachers who carry New Heights Church alongside them.`,
   path: "/about/leadership",
 });
 
 /**
  * Leadership. The office carries honor here — "worthy of double honor,
  * especially those who labor in the word and doctrine" (1 Timothy 5:17).
- * The Hallams are confirmed; the eldership and staff roster is PENDING
- * the Church providing names and bios (docs/OPEN_QUESTIONS.md).
+ * The Hallams lead; the ministry team roster is `CHURCH.leadership.team`,
+ * rendered in the order the Church gave it, every name with its office.
  */
 interface LeaderLink {
   label: string;
@@ -80,7 +80,7 @@ export default function LeadershipPage() {
           <>
             {CHURCH.leadership.seniorPastor} and {CHURCH.leadership.firstLady} planted
             this house in {CHURCH.founded} and lead it today. Alongside them, a team of
-            elders, staff, and team leads keeps the altar open and the house in order.
+            prophets, pastors, and teachers keeps the altar open and the house in order.
           </>
         }
       />
@@ -158,20 +158,39 @@ export default function LeadershipPage() {
         </Container>
       </section>
 
-      {/* ---- Eldership ---- */}
+      {/* ---- The ministry team ---- */}
       <section className="bg-[color:var(--nh-bone)] py-20 md:py-24">
-        <Container size="md">
-          <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">Elders &amp; staff</p>
-          <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
-            A house in order.
+        <Container size="xl">
+          <div className="flex items-center gap-4 text-[color:var(--nh-gold-ink)]">
+            <span aria-hidden="true" className="u-rule-gold w-12" />
+            <span className="u-eyebrow">The ministry team</span>
+          </div>
+          <h2 className="u-display-dramatic text-ink mt-4 max-w-[18ch] text-[clamp(1.75rem,4vw,2.75rem)]">
+            Set in the house.
           </h2>
-          <p className="text-stone mt-6 text-lg leading-relaxed md:text-xl">
-            New Heights is led by the pastors with a team of elders and leads over
-            worship, First Touch, Youth Army, Young Lions, media, and prayer. Names,
-            roles, and portraits will be added here as the Church finalizes them for the
-            new site.
+          <p className="text-stone mt-6 max-w-[60ch] text-lg leading-relaxed md:text-xl">
+            The prophets, pastors, and teachers who labor in the Word of God and at the
+            altar alongside {CHURCH.leadership.seniorPastor} and{" "}
+            {CHURCH.leadership.firstLady}.
           </p>
-          <p className="text-fog mt-6 text-sm italic">
+
+          <ul className="mt-12 grid gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
+            {CHURCH.leadership.team.map((m) => (
+              <li
+                key={`${m.office}-${m.name}`}
+                className="border-t border-[color:var(--nh-gold)] pt-4"
+              >
+                <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">
+                  {OFFICE_LABEL[m.office]}
+                </p>
+                <p className="font-display text-ink mt-2 text-2xl leading-tight">
+                  {leaderName(m)}
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-fog mt-12 text-sm italic">
             Need prayer, pastoral care, or an introduction? Submit a{" "}
             <Link
               href="/connect"

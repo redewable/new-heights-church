@@ -10,3 +10,5 @@ pnpm-lock.yaml
 public/brand/**
 supabase/migrations
 .claude
+test-results
+playwright-report

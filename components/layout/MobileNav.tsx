@@ -7,15 +7,13 @@ import { AscendingBars } from "@/components/brand/AscendingBars";
 import { Button } from "@/components/ui/Button";
 import { PILLAR_STRIP } from "@/lib/constants/church";
 import { cn } from "@/lib/utils/cn";
-
-interface NavItem {
-  label: string;
-  href: string;
-}
+import type { NavItem } from "./nav";
 
 /**
  * Full-screen takeover on mobile with the three-pillar mark as its sign-off.
- * Desktop nav lives in <Header>; this component hides itself at `lg:` and up.
+ * An item with children shows them indented beneath it, so the About
+ * section reads as a group. Desktop nav lives in <Header>; this component
+ * hides itself at `lg:` and up.
  */
 export function MobileNav({ items }: { items: ReadonlyArray<NavItem> }) {
   const [open, setOpen] = useState(false);
@@ -88,6 +86,26 @@ export function MobileNav({ items }: { items: ReadonlyArray<NavItem> }) {
                     →
                   </span>
                 </Link>
+                {item.children ? (
+                  <ul className="-mt-1 mb-3 flex flex-col border-l border-white/15 pl-4">
+                    {item.children
+                      .filter((c) => c.href !== item.href)
+                      .map((c) => (
+                        <li key={c.href}>
+                          <Link
+                            href={c.href}
+                            onClick={close}
+                            className={cn(
+                              "block py-2 text-lg",
+                              c.secondary ? "text-cream/60 text-base" : "text-cream/85",
+                            )}
+                          >
+                            {c.label}
+                          </Link>
+                        </li>
+                      ))}
+                  </ul>
+                ) : null}
               </li>
             ))}
           </ul>

@@ -6,24 +6,29 @@ import { test, expect } from "@playwright/test";
  */
 
 test.describe("About wing — Phase 5a smoke", () => {
-  test("/about hub lists three rooms", async ({ page }) => {
+  test("/about hub lists four rooms", async ({ page }) => {
     await page.goto("/about");
     await expect(
       page.getByRole("heading", { level: 1, name: /Who we are/i }),
     ).toBeVisible();
-    await expect(page.getByRole("link", { name: /What we believe/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Our leadership/i })).toBeVisible();
-    await expect(page.getByRole("link", { name: /Plan a visit/i })).toBeVisible();
+    const main = page.getByRole("main");
+    await expect(main.getByRole("link", { name: /What we believe/i })).toBeVisible();
+    await expect(main.getByRole("link", { name: /Our leadership/i })).toBeVisible();
+    await expect(
+      main.getByRole("link", { name: /^Brian Hallam Ministries/i }),
+    ).toBeVisible();
+    await expect(main.getByRole("link", { name: /Plan a visit/i })).toBeVisible();
   });
 
-  test("/about/beliefs renders MDX content", async ({ page }) => {
+  test("/about/beliefs carries the values and the convictions", async ({ page }) => {
     await page.goto("/about/beliefs");
     await expect(
       page.getByRole("heading", { level: 1, name: /What we believe/i }),
     ).toBeVisible();
-    // A few section headings from the MDX
-    await expect(page.getByRole("heading", { name: /^The Word$/ })).toBeVisible();
-    await expect(page.getByRole("heading", { name: /^The Son$/ })).toBeVisible();
+    await expect(page.getByText(/Twenty-one statements/i)).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /Straight from the Bible/i }),
+    ).toBeVisible();
   });
 
   test("/about/leadership names the Hallams", async ({ page }) => {
@@ -31,8 +36,12 @@ test.describe("About wing — Phase 5a smoke", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /^Leadership/i }),
     ).toBeVisible();
-    await expect(page.getByText("Apostle Brian Hallam")).toBeVisible();
-    await expect(page.getByText("Crystal Hallam")).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Apostle Brian Hallam", exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: "Pastor Crystal Hallam", exact: true }),
+    ).toBeVisible();
   });
 
   test("/about/visit has service times + directions CTA", async ({ page }) => {
@@ -115,7 +124,52 @@ test.describe("Podcasts + Resources — Phase 5a smoke", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /^Resources/i }),
     ).toBeVisible();
-    const bhm = page.getByRole("link", { name: /Brian Hallam Ministries/i });
-    await expect(bhm).toHaveAttribute("href", /brianhallam\.com/);
+    const bhm = page
+      .getByRole("main")
+      .locator('a[href="https://brianhallam.com"]')
+      .first();
+    await expect(bhm).toBeVisible();
+  });
+});
+
+test.describe("Brian Hallam Ministries — About wing", () => {
+  test("/about/brian-hallam-ministries gathers the ministry's links", async ({
+    page,
+  }) => {
+    await page.goto("/about/brian-hallam-ministries");
+    await expect(
+      page.getByRole("heading", { level: 1, name: /Brian Hallam Ministries/i }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("link", { name: /^brianhallam\.com/ }).first(),
+    ).toHaveAttribute("href", /brianhallam\.com/);
+    await expect(page.getByRole("link", { name: /^Apple Podcasts$/ })).toHaveAttribute(
+      "href",
+      /id1604967894/,
+    );
+    await expect(page.getByRole("link", { name: /^Facebook$/ })).toHaveAttribute(
+      "href",
+      /facebook\.com\/pastorbrianhallam/,
+    );
+  });
+
+  test("the About menu opens to the ministry page", async ({ page, isMobile }) => {
+    test.skip(isMobile, "desktop menu only");
+    await page.goto("/");
+    const nav = page.getByRole("navigation", { name: "Primary" });
+    await nav.getByRole("button", { name: /^About/ }).click();
+    const item = nav.getByRole("link", { name: /^Brian Hallam Ministries/ });
+    await expect(item).toBeVisible();
+    await item.click();
+    await expect(page).toHaveURL(/\/about\/brian-hallam-ministries$/);
+  });
+
+  test("/about/leadership names the ministry team with their offices", async ({
+    page,
+  }) => {
+    await page.goto("/about/leadership");
+    await expect(page.getByText("Prophet Larry Hallam")).toBeVisible();
+    await expect(page.getByText("Pastor Sherdonna Bragg")).toBeVisible();
+    await expect(page.getByText("Teacher Lacresha")).toBeVisible();
   });
 });

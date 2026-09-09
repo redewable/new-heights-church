@@ -3,20 +3,13 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { MobileNav } from "./MobileNav";
 import { NavLink } from "./NavLink";
-
-export const PRIMARY_NAV = [
-  { label: "I'm New", href: "/im-new" },
-  { label: "Watch", href: "/watch" },
-  { label: "Sermons", href: "/sermons" },
-  { label: "Events", href: "/events" },
-  { label: "Grow", href: "/grow" },
-  { label: "Give", href: "/give" },
-  { label: "About", href: "/about" },
-] as const;
+import { NavMenu } from "./NavMenu";
+import { PRIMARY_NAV } from "./nav";
 
 /**
  * Site header. Cream, sticky, one row: the mark, the primary nav with a
- * gold active underline, and two decisions — watch, or give.
+ * gold active underline (About opens a menu of its section pages), and
+ * two decisions — watch, or give.
  */
 export function Header() {
   return (
@@ -31,7 +24,11 @@ export function Header() {
           <ul className="flex items-center gap-8">
             {PRIMARY_NAV.map((item) => (
               <li key={item.href}>
-                <NavLink href={item.href}>{item.label}</NavLink>
+                {item.children ? (
+                  <NavMenu label={item.label} href={item.href} items={item.children} />
+                ) : (
+                  <NavLink href={item.href}>{item.label}</NavLink>
+                )}
               </li>
             ))}
           </ul>

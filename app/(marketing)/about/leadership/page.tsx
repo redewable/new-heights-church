@@ -83,6 +83,7 @@ export default function LeadershipPage() {
             prophets, pastors, and teachers keeps the altar open and the house in order.
           </>
         }
+        leadShort={`Planted ${CHURCH.founded}. Led by ${CHURCH.leadership.seniorPastor} and ${CHURCH.leadership.firstLady}.`}
       />
 
       {/* ---- Double honor ---- */}
@@ -118,7 +119,9 @@ export default function LeadershipPage() {
                 <h2 className="font-display text-ink mt-3 text-3xl md:text-4xl">
                   {leader.name}
                 </h2>
-                <p className="text-stone mt-4 text-lg leading-relaxed">{leader.blurb}</p>
+                <p className="text-stone mt-4 hidden text-lg leading-relaxed md:block">
+                  {leader.blurb}
+                </p>
                 {leader.links?.length ? (
                   <ul className="mt-6 space-y-2">
                     {leader.links.map((l) => (

@@ -83,7 +83,8 @@ export function BookFeature({
             >
               <AscendingBars size={20} aria-label="" />
               <span className="u-eyebrow">
-                From {BOOK.author} · {BHM.name}
+                From {BOOK.author}
+                <span className="hidden sm:inline"> · {BHM.name}</span>
               </span>
             </div>
 
@@ -115,7 +116,7 @@ export function BookFeature({
 
             <div
               className={cn(
-                "mt-7 max-w-[60ch] space-y-5 text-lg leading-relaxed",
+                "mt-7 hidden max-w-[60ch] space-y-5 text-lg leading-relaxed md:block",
                 ink ? "text-cream/80" : "text-stone",
               )}
             >
@@ -123,6 +124,14 @@ export function BookFeature({
                 <p key={p.slice(0, 32)}>{p}</p>
               ))}
             </div>
+            <p
+              className={cn(
+                "mt-5 text-lg leading-snug md:hidden",
+                ink ? "text-cream/80" : "text-stone",
+              )}
+            >
+              {BOOK.summary}
+            </p>
 
             <div className="mt-9 flex flex-wrap items-center gap-3">
               <Button variant="gold" size="lg" href={BOOK.buy.direct} external>

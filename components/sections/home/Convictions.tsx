@@ -23,7 +23,7 @@ export function Convictions() {
           Straight from the Bible!
         </h2>
 
-        <ul className="mt-12 grid gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-x-10">
+        <ul className="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2 md:mt-12 md:gap-y-10 lg:grid-cols-4 lg:gap-x-10">
           {CHURCH.convictions.map((c) => (
             <li
               key={c.key}
@@ -32,7 +32,7 @@ export function Convictions() {
               <p className="u-display-soft text-ink text-xl leading-snug md:text-2xl">
                 {c.statement}
               </p>
-              <p className="text-stone mt-3 text-sm leading-relaxed md:text-base">
+              <p className="text-stone mt-3 hidden text-sm leading-relaxed md:block md:text-base">
                 {c.note}
               </p>
               <p className="u-eyebrow mt-4 text-[color:var(--nh-gold-ink)]">{c.verse}</p>

@@ -45,7 +45,12 @@ export function Letter() {
               We save a seat for you.
             </h2>
 
-            <div className="text-ink mt-8 max-w-[58ch] space-y-6 text-lg leading-relaxed md:text-xl">
+            <p className="text-ink mt-6 text-lg leading-snug md:hidden">
+              Park anywhere, walk in the front doors, and the First Touch Team will find
+              you. Come as you are — you are walking into a family.
+            </p>
+
+            <div className="text-ink mt-8 hidden max-w-[58ch] space-y-6 text-lg leading-relaxed md:block md:text-xl">
               <p>
                 Park anywhere in the lot and walk in through the front doors. Someone on
                 the First Touch Team will find you before you find them — tell them

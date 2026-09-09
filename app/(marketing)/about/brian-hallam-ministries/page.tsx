@@ -96,6 +96,7 @@ export default async function BrianHallamMinistriesPage() {
         title="Brian Hallam Ministries."
         titleMaxCh={14}
         lead={BHM.blurb}
+        leadShort="Preaching, the podcast, and the book — beyond Sunday morning."
         photo={MEDIA.altar}
         photoPosition="50% 18%"
         actions={
@@ -146,7 +147,9 @@ export default async function BrianHallamMinistriesPage() {
                 <h3 className="u-display-soft text-ink mt-3 text-2xl leading-snug md:text-[1.75rem]">
                   {room.title}
                 </h3>
-                <p className="text-stone mt-3 leading-relaxed md:text-lg">{room.body}</p>
+                <p className="text-stone mt-3 hidden leading-relaxed md:block md:text-lg">
+                  {room.body}
+                </p>
                 {room.cta.external ? (
                   <a
                     href={room.cta.href}

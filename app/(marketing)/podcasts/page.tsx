@@ -63,6 +63,7 @@ export default async function PodcastsPage() {
         eyebrow="Listen any time"
         title="Podcasts."
         lead="The longer-form conversations with Apostle Brian Hallam — on the platforms you already use."
+        leadShort="Apostle Brian Hallam, on the platforms you already use."
         photo={MEDIA.podcast}
         photoPosition="70% 24%"
         size="lg"
@@ -112,7 +113,9 @@ function ShowBlock({ show, latest }: { show: PodcastShow; latest: LatestUpload |
         <p className="u-display-soft text-stone mt-4 text-lg md:text-xl">
           {show.tagline}
         </p>
-        <p className="text-ink mt-6 text-lg leading-relaxed">{show.blurb}</p>
+        <p className="text-ink mt-6 hidden text-lg leading-relaxed md:block">
+          {show.blurb}
+        </p>
 
         <div className="mt-8 flex flex-wrap gap-3">
           {live.map((p) => (

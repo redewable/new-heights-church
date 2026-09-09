@@ -30,7 +30,17 @@ export function MoveOfGod() {
               This is a move of God.
             </h2>
 
-            <div className="text-cream/85 mt-8 max-w-[54ch] space-y-5 text-lg leading-relaxed md:text-xl">
+            <div className="text-cream/85 mt-6 space-y-3 md:hidden">
+              <p className="u-display-soft text-2xl leading-snug text-[color:var(--nh-gold)]">
+                The oil comes at a cost.
+              </p>
+              <p className="text-lg leading-snug">
+                Pressing toward the mark, not drifting toward the world. Hot, not
+                lukewarm.
+              </p>
+            </div>
+
+            <div className="text-cream/85 mt-8 hidden max-w-[54ch] space-y-5 text-lg leading-relaxed md:block md:text-xl">
               <p>
                 The pursuit of God above all else. We don&rsquo;t take this lightly —
                 being a Christian is not a Sunday habit or a prayer from long ago. It is
@@ -69,7 +79,7 @@ export function MoveOfGod() {
             </div>
           </div>
 
-          <figure className="u-frame-gold relative mx-auto aspect-[2/3] w-full max-w-[22rem] overflow-hidden rounded-[var(--radius-lg)] md:max-w-none">
+          <figure className="u-frame-gold relative order-first mx-auto aspect-[4/5] w-full max-w-[22rem] overflow-hidden rounded-[var(--radius-lg)] md:order-none md:aspect-[2/3] md:max-w-none">
             <Image
               src={MEDIA.altar.src}
               alt={MEDIA.altar.alt}

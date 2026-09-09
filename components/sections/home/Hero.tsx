@@ -31,7 +31,10 @@ export function Hero() {
         <div className="max-w-[42rem]">
           <div className="u-rise flex items-center gap-3 text-[color:var(--nh-gold)]">
             <AscendingBars size={20} aria-label="" />
-            <span className="u-eyebrow">College Station, Texas · House of the Lord</span>
+            <span className="u-eyebrow">
+              College Station, Texas
+              <span className="hidden sm:inline"> · House of the Lord</span>
+            </span>
           </div>
 
           <h1 className="u-display-dramatic text-cream u-rise u-rise-2 mt-8 max-w-[16ch] text-[clamp(2.75rem,6vw,5.75rem)]">
@@ -40,10 +43,13 @@ export function Hero() {
             <span className="text-[color:var(--nh-gold)]">Leave with fire.</span>
           </h1>
 
-          <p className="text-cream/90 u-rise u-rise-3 mt-7 max-w-[36rem] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/90 u-rise u-rise-3 mt-7 hidden max-w-[36rem] text-lg leading-relaxed md:block md:text-xl">
             A Spirit-filled, apostolic-prophetic house in the Brazos Valley. We preach the
             whole counsel of God, we make room for the altar, and we expect Him to move —
             because He still does.
+          </p>
+          <p className="text-cream/90 u-rise u-rise-3 mt-6 max-w-[24ch] text-lg leading-snug md:hidden">
+            A Spirit-filled, apostolic-prophetic house in the Brazos Valley.
           </p>
 
           <div className="u-rise u-rise-4 mt-9 flex flex-wrap items-center gap-3">

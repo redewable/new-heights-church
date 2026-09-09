@@ -16,6 +16,7 @@ export function PageHero({
   eyebrow,
   title,
   lead,
+  leadShort,
   actions,
   photo,
   photoPosition = "70% center",
@@ -25,6 +26,8 @@ export function PageHero({
   eyebrow: string;
   title: ReactNode;
   lead?: ReactNode;
+  /** One line for phones; `lead` then shows only from `md` up. */
+  leadShort?: ReactNode;
   actions?: ReactNode;
   photo?: Photo;
   /** CSS object-position for the photo. */
@@ -78,8 +81,18 @@ export function PageHero({
             {title}
           </h1>
           {lead ? (
-            <p className="text-cream/88 u-rise u-rise-3 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+            <p
+              className={cn(
+                "text-cream/88 u-rise u-rise-3 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl",
+                leadShort && "hidden md:block",
+              )}
+            >
               {lead}
+            </p>
+          ) : null}
+          {leadShort ? (
+            <p className="text-cream/88 u-rise u-rise-3 mt-5 max-w-[30ch] text-lg leading-snug md:hidden">
+              {leadShort}
             </p>
           ) : null}
           {actions ? (

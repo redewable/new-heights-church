@@ -30,12 +30,12 @@ export function WhereWeGather() {
             >
               {a.city}, {a.region}.
             </h2>
-            <p className="text-stone mt-5 max-w-[42ch] text-lg md:text-xl">
+            <p className="text-stone mt-5 hidden max-w-[42ch] text-lg md:block md:text-xl">
               A real house on a real street in the Brazos Valley. Doors open thirty
               minutes before every service, and the altar is always open.
             </p>
 
-            <address className="text-ink mt-10 space-y-1 text-lg not-italic">
+            <address className="text-ink mt-6 space-y-1 text-lg not-italic md:mt-10">
               <div>{a.street}</div>
               <div>
                 {a.city}, {a.region} {a.postal}
@@ -60,7 +60,7 @@ export function WhereWeGather() {
                   </a>
                 </dd>
               </div>
-              <div className="min-w-0">
+              <div className="col-span-2 min-w-0 sm:col-span-1">
                 <dt className="u-eyebrow text-fog">Office</dt>
                 <dd className="mt-1 text-base">
                   <a
@@ -85,7 +85,7 @@ export function WhereWeGather() {
             </div>
           </div>
 
-          <figure className="u-frame-gold relative aspect-[4/3] overflow-hidden rounded-[var(--radius-lg)]">
+          <figure className="u-frame-gold relative order-first aspect-[4/3] overflow-hidden rounded-[var(--radius-lg)] md:order-none">
             <Image
               src={MEDIA.campus.src}
               alt={MEDIA.campus.alt}
@@ -95,7 +95,7 @@ export function WhereWeGather() {
             />
             <figcaption className="u-eyebrow text-cream/90 absolute right-4 bottom-4 left-4 flex items-center gap-3">
               <span aria-hidden="true" className="h-px w-8 bg-[color:var(--nh-gold)]" />
-              {a.street} · The campus
+              <span className="hidden sm:inline">{a.street} · </span>The campus
             </figcaption>
           </figure>
         </div>

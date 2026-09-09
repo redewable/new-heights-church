@@ -16,24 +16,20 @@ test.describe("Sermons — Phase 2 smoke", () => {
 
   test("pillar filter narrows results", async ({ page }) => {
     await page.goto("/sermons?pillar=harvest");
-    await expect(page.getByRole("link", { name: /^Harvest$/ })).toHaveAttribute(
+    await expect(page.getByRole("link", { name: /^Endtime Harvest$/ })).toHaveAttribute(
       "aria-current",
       "true",
     );
   });
 
-  test("sermon detail renders with scripture chips and a player poster", async ({
+  test("sermon detail renders the service title and a player poster", async ({
     page,
   }) => {
+    // Fixtures are the Church's real services: "Sunday Morning · September 6, 2026".
     await page.goto("/sermons/sunday-morning-2026-09-06");
     await expect(
-      page.getByRole("heading", { level: 1, name: /Not a Visitation/ }),
+      page.getByRole("heading", { level: 1, name: /Sunday Morning/ }),
     ).toBeVisible();
-    // Scripture chip links out to bible.com
-    await expect(page.getByRole("link", { name: /Psalm 132/ })).toHaveAttribute(
-      "target",
-      "_blank",
-    );
     // Click-to-play button is visible before any interaction.
     await expect(page.getByRole("button", { name: /Play sermon/i })).toBeVisible();
   });
@@ -61,7 +57,7 @@ test.describe("Home — Phase 1 smoke", () => {
   test("hero copy lands", async ({ page }) => {
     await page.goto("/");
     await expect(
-      page.getByRole("heading", { level: 1, name: /come hungry/i }),
+      page.getByRole("heading", { level: 1, name: /come expectant/i }),
     ).toBeVisible();
   });
 

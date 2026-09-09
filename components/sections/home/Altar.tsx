@@ -41,10 +41,13 @@ export function Altar() {
           has loved you.
         </h2>
 
-        <p className="text-stone mx-auto mt-7 max-w-[46ch] text-lg leading-relaxed md:text-xl">
+        <p className="text-stone mx-auto mt-7 hidden max-w-[46ch] text-lg leading-relaxed md:block md:text-xl">
           Every seat filled, every soul saved, every building raised — generosity is the
           soil. We never touch your card. Five honest paths to give; pick the one that
           fits.
+        </p>
+        <p className="text-stone mx-auto mt-7 max-w-[46ch] text-lg leading-relaxed md:hidden md:text-xl">
+          Generosity is the soil. Five honest ways to give.
         </p>
 
         <div className="mt-10 flex flex-wrap items-center justify-center gap-3">

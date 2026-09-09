@@ -66,6 +66,7 @@ export default function AboutHubPage() {
             to move when His people gather.
           </>
         }
+        leadShort={`A Spirit-filled, apostolic-prophetic house in College Station, planted ${CHURCH.founded}.`}
       />
 
       {/* ---- Story + mission ---- */}
@@ -86,7 +87,7 @@ export default function AboutHubPage() {
                   the pattern has held: worship lifts, the Word lands, the altar stays
                   open.
                 </p>
-                <p>
+                <p className="hidden md:block">
                   Today the house gathers Sundays and Wednesdays, hosts conferences and
                   worship nights, sends the Youth Army to camp, and disciples every
                   planted member through the Foundations of Faith path. In this season it

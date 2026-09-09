@@ -32,9 +32,14 @@ export async function FeaturedEvent() {
             <div className="flex items-center gap-4 text-[color:var(--nh-gold-ink)]">
               <span aria-hidden="true" className="u-rule-gold w-12" />
               <span className="u-eyebrow">
-                {event.ministry === "conferences"
-                  ? `${CHURCH.shortName} Conference`
-                  : "Featured"}{" "}
+                {event.ministry === "conferences" ? (
+                  <>
+                    <span className="hidden sm:inline">{CHURCH.shortName} </span>
+                    Conference
+                  </>
+                ) : (
+                  "Featured"
+                )}{" "}
                 · <span className="whitespace-nowrap">{eventRangeShort(event)}</span>
               </span>
             </div>
@@ -47,7 +52,7 @@ export async function FeaturedEvent() {
             </h2>
 
             {event.subtitle ? (
-              <p className="text-stone mt-5 max-w-[42ch] text-lg leading-relaxed md:text-xl">
+              <p className="text-stone mt-5 hidden max-w-[42ch] text-lg leading-relaxed md:block md:text-xl">
                 {event.subtitle}
               </p>
             ) : null}
@@ -87,7 +92,7 @@ export async function FeaturedEvent() {
           {event.poster_url ? (
             <Link
               href={href}
-              className="group block"
+              className="group order-first block md:order-none"
               aria-label={`${event.title} details`}
             >
               <figure className="u-frame-gold relative aspect-video overflow-hidden rounded-[var(--radius-lg)] shadow-[0_40px_80px_-40px_rgba(11,27,43,0.6)] ring-1 ring-black/10 transition-transform duration-300 group-hover:-translate-y-1">

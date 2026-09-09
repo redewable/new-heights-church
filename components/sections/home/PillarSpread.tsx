@@ -50,10 +50,13 @@ export function PillarSpread() {
             Three things. <br className="hidden md:inline" />
             <span className="text-stone">God&rsquo;s house. One accord.</span>
           </h2>
-          <p className="text-stone max-w-[40rem] text-lg">
+          <p className="text-stone hidden max-w-[40rem] text-lg md:block">
             In this season, New Heights is about three things — the same three you see in
             the mark on our door. Every service, every class, every altar call traces back
             to one of them.
+          </p>
+          <p className="text-stone text-lg md:hidden">
+            The same three you see in the mark on our door.
           </p>
         </div>
       </Container>
@@ -116,7 +119,7 @@ function PillarRow({
       <Container
         size="lg"
         className={cn(
-          "relative grid items-center gap-5 py-8 md:gap-10 md:py-10",
+          "relative grid grid-cols-[auto_minmax(0,1fr)] items-center gap-5 py-7 md:gap-10 md:py-10",
           flip
             ? "md:grid-cols-[minmax(0,1fr)_auto] md:justify-items-end"
             : "md:grid-cols-[auto_minmax(0,1fr)]",
@@ -125,7 +128,7 @@ function PillarRow({
         <div className={cn("flex items-center", flip && "md:order-2")}>
           <AscendingBars
             highlight={pillar}
-            className="text-ink h-[clamp(4.5rem,8vw,7rem)] w-auto"
+            className="text-ink h-[3.25rem] w-auto md:h-[clamp(4.5rem,8vw,7rem)]"
             aria-label=""
           />
         </div>
@@ -156,7 +159,7 @@ function PillarRow({
 
           <p
             className={cn(
-              "text-stone mt-3 max-w-[56ch] leading-relaxed md:text-lg",
+              "text-stone mt-3 hidden max-w-[56ch] leading-relaxed md:block md:text-lg",
               flip && "md:ml-auto",
             )}
           >

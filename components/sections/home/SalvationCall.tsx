@@ -34,7 +34,41 @@ export function SalvationCall() {
           Make Him Lord. <span className="text-[color:var(--nh-scarlet)]">Today.</span>
         </h2>
 
-        <div className="text-ink mt-8 max-w-[58ch] space-y-5 text-lg leading-relaxed md:text-xl">
+        {/* Phones: the same call, compartmentalized — one line, three tiles, the plea. */}
+        <div className="text-ink mt-7 md:hidden">
+          <p className="text-lg leading-snug">
+            It is heaven or hell. There is no third option. No one is promised tomorrow.
+          </p>
+          <ol className="mt-5 grid grid-cols-3 gap-2">
+            {[
+              ["Accept", "that Jesus Christ died for your sins and rose again"],
+              ["Believe", "it in your heart"],
+              ["Confess", "with your mouth that Jesus is Lord"],
+            ].map(([word, rest], i) => (
+              <li
+                key={word}
+                className="bg-paper rounded-[var(--radius)] border border-[color:var(--nh-border)] p-3"
+              >
+                <span
+                  aria-hidden="true"
+                  className="u-numeral block text-lg text-[color:var(--nh-scarlet)]"
+                >
+                  {["I", "II", "III"][i]}
+                </span>
+                <span className="font-display text-ink mt-1 block text-lg leading-tight">
+                  {word}
+                </span>
+                <span className="text-stone mt-1 block text-xs leading-snug">{rest}</span>
+              </li>
+            ))}
+          </ol>
+          <p className="u-display-soft text-ink mt-6 text-2xl leading-snug">
+            We implore you: make a decision today to make God Almighty the Lord of your
+            life.
+          </p>
+        </div>
+
+        <div className="text-ink mt-8 hidden max-w-[58ch] space-y-5 text-lg leading-relaxed md:block md:text-xl">
           <p>
             It is heaven or hell. There is no third option. No one is promised tomorrow,
             and no man knows the day or the hour of the return of the Lord.
@@ -69,7 +103,9 @@ export function SalvationCall() {
         <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[color:var(--nh-border)] pt-6">
           <Button variant="ghost" size="md" href={CHURCH.contact.phoneHref}>
             <PhoneIcon />
-            Call to pray with someone · {CHURCH.contact.phone}
+            <span className="hidden sm:inline">Call to pray with someone · </span>
+            <span className="sm:hidden">Call · </span>
+            {CHURCH.contact.phone}
           </Button>
           <a
             href="/connect/prayer"
@@ -78,7 +114,7 @@ export function SalvationCall() {
             Or send a prayer request
           </a>
         </div>
-        <p className="text-stone mt-4 max-w-[52ch] text-sm">
+        <p className="text-stone mt-4 hidden max-w-[52ch] text-sm md:block">
           Say it out loud, then tell us. The pastoral team will follow up personally, and
           the house will stand with you at the altar this Sunday.
         </p>

@@ -49,10 +49,13 @@ export async function ThisSunday() {
             >
               Sunday, 10 A.M.
             </h2>
-            <p className="text-stone mt-5 max-w-[40ch] text-lg leading-relaxed md:text-xl">
+            <p className="text-stone mt-5 hidden max-w-[40ch] text-lg leading-relaxed md:block md:text-xl">
               Worship lifts. The Word lands. The altar stays open. You do not need to know
               how to dress, sit, or sing — you need to know you&rsquo;re welcome. The
               doors open at 9:30 and we start together at ten.
+            </p>
+            <p className="text-stone mt-4 text-lg leading-snug md:hidden">
+              Worship lifts. The Word lands. The altar stays open. Doors open at 9:30.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">

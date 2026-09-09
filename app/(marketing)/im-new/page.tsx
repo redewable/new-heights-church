@@ -94,6 +94,7 @@ export default function ImNewPage() {
             phone — come ready, and come expectant.
           </>
         }
+        leadShort="Sundays 10 AM · Wednesdays 7 PM. Doors open thirty minutes early."
         actions={
           <>
             <Button variant="gold" size="lg" href="#connect">
@@ -128,16 +129,19 @@ export default function ImNewPage() {
                   num: "I",
                   t: "Worship lifts",
                   b: "The band plays. The room sings. You can sing, sit, stand — whatever your spirit wants to do. There is no wrong posture before the Lord.",
+                  s: "Sing, sit, stand — no wrong posture before the Lord.",
                 },
                 {
                   num: "II",
                   t: "The Word lands",
                   b: `${CHURCH.leadership.seniorPastor} preaches. Expect the Word of God, expect directness, expect application that will cost you something. Bring a Bible and take notes.`,
+                  s: "Bring a Bible. Take notes. Expect it to cost you something.",
                 },
                 {
                   num: "III",
                   t: "The altar stays open",
                   b: "We don't rush the response. Come forward, stay in your seat, kneel, raise your hands — do what's yours to do. The altar is where this house started and where it stays.",
+                  s: "Come forward or stay seated. A response, never a requirement.",
                 },
               ].map((s) => (
                 <li
@@ -153,7 +157,12 @@ export default function ImNewPage() {
                   </span>
                   <div>
                     <h3 className="font-display text-ink text-xl md:text-2xl">{s.t}</h3>
-                    <p className="text-stone mt-2 leading-relaxed">{s.b}</p>
+                    <p className="text-stone mt-2 hidden leading-relaxed md:block">
+                      {s.b}
+                    </p>
+                    <p className="text-stone mt-1 text-sm leading-snug md:hidden">
+                      {s.s}
+                    </p>
                   </div>
                 </li>
               ))}
@@ -182,14 +191,17 @@ export default function ImNewPage() {
               <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
                 {CHURCH.leadership.seniorPastor} &amp; {CHURCH.leadership.firstLady}.
               </h2>
-              <p className="text-stone mt-6 text-lg leading-relaxed">
+              <p className="text-stone mt-4 text-lg leading-snug md:hidden">
+                Planted New Heights in {CHURCH.founded}. Honor, order, and an open altar.
+              </p>
+              <p className="text-stone mt-6 hidden text-lg leading-relaxed md:block">
                 {CHURCH.leadership.seniorPastor} and {CHURCH.leadership.firstLady} planted
                 New Heights in {CHURCH.founded} and lead it today — with honor, with
                 order, and with an open altar. {CHURCH.leadership.seniorPastor} carries
                 the apostolic office of the house and preaches the Word every Sunday and
                 Wednesday.
               </p>
-              <p className="text-stone mt-4 text-lg leading-relaxed">
+              <p className="text-stone mt-4 hidden text-lg leading-relaxed md:block">
                 If you need prayer, pastoral care, or a next step, the First Touch Team
                 and the Connect Card are how this house responds. Nothing gets lost.
               </p>
@@ -210,7 +222,8 @@ export default function ImNewPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
             Straight answers.
           </h2>
-          <dl className="mt-10 divide-y divide-[color:var(--nh-border)]">
+          {/* Desktop: question beside answer. */}
+          <dl className="mt-10 hidden divide-y divide-[color:var(--nh-border)] md:block">
             {FAQ.map((f) => (
               <div
                 key={f.q}
@@ -223,6 +236,23 @@ export default function ImNewPage() {
               </div>
             ))}
           </dl>
+          {/* Phones: questions as tappable rows; the answer opens beneath. */}
+          <div className="mt-8 divide-y divide-[color:var(--nh-border)] md:hidden">
+            {FAQ.map((f) => (
+              <details key={f.q} className="group py-4">
+                <summary className="font-display text-ink flex cursor-pointer list-none items-center justify-between gap-4 text-lg leading-snug [&::-webkit-details-marker]:hidden">
+                  {f.q}
+                  <span
+                    aria-hidden="true"
+                    className="text-[color:var(--nh-gold-ink)] transition-transform group-open:rotate-45"
+                  >
+                    +
+                  </span>
+                </summary>
+                <p className="text-stone mt-3 leading-relaxed">{f.a}</p>
+              </details>
+            ))}
+          </div>
         </Container>
       </section>
 
@@ -238,10 +268,13 @@ export default function ImNewPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(2rem,4.5vw,3.5rem)]">
             We&rsquo;ll look for you.
           </h2>
-          <p className="text-stone mt-6 text-lg">
+          <p className="text-stone mt-6 hidden text-lg md:block">
             Send a quick note. We&rsquo;ll let a greeter know your name so you&rsquo;re
             expected, not anonymous. No obligation, no marketing list — we read every
             card.
+          </p>
+          <p className="text-stone mt-5 text-lg leading-snug md:hidden">
+            Send a quick note and a greeter will know your name.
           </p>
           <div className="mt-10">
             <ConnectCardForm />

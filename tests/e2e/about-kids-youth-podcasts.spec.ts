@@ -25,7 +25,9 @@ test.describe("About wing — Phase 5a smoke", () => {
     await expect(
       page.getByRole("heading", { level: 1, name: /What we believe/i }),
     ).toBeVisible();
-    await expect(page.getByText(/Twenty-one statements/i)).toBeVisible();
+    await expect(
+      page.getByRole("heading", { name: /What this house holds/i }),
+    ).toBeVisible();
     await expect(
       page.getByRole("heading", { name: /Straight from the Bible/i }),
     ).toBeVisible();

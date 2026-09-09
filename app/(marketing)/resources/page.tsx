@@ -116,10 +116,13 @@ export default function ResourcesPage() {
           <h1 className="u-display-dramatic text-cream mt-7 max-w-[14ch] text-[clamp(2.75rem,6.5vw,6rem)]">
             Resources.
           </h1>
-          <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/85 mt-6 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
             Books, teaching, and the partner brands that orbit this house. Everything here
             is vetted by leadership — no random affiliate links, no &ldquo;recommended for
             you.&rdquo;
+          </p>
+          <p className="text-cream/85 mt-5 max-w-[26ch] text-lg leading-snug md:hidden">
+            Books, teaching, and the ministries around this house.
           </p>
         </Container>
       </section>
@@ -144,7 +147,7 @@ export default function ResourcesPage() {
             ))}
           </div>
 
-          <p className="text-fog mt-12 text-sm italic">
+          <p className="text-fog mt-12 hidden text-sm italic md:block">
             Want a specific recommendation for where you are right now? Drop a note via
             the{" "}
             <Link
@@ -166,7 +169,9 @@ function ResourceCard({ item }: { item: ResourceItem }) {
     <>
       <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">{item.kicker}</p>
       <h3 className="font-display text-ink mt-3 text-2xl leading-tight">{item.title}</h3>
-      <p className="text-stone mt-4 flex-1 leading-relaxed">{item.blurb}</p>
+      <p className="text-stone mt-4 hidden flex-1 leading-relaxed md:block">
+        {item.blurb}
+      </p>
       <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--nh-scarlet-ink)]">
         <span
           aria-hidden="true"

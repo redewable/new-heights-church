@@ -43,10 +43,13 @@ export default async function YouthPage() {
           <h1 className="u-display-dramatic text-cream mt-7 max-w-[14ch] text-[clamp(2.75rem,7vw,6.5rem)]">
             Youth Army.
           </h1>
-          <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/85 mt-6 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
             This is not a watered-down version of church. Youth Army is worship, word, and
             altar for 6th through 12th grade — same Spirit, same seriousness, same
             expectation that Jesus will show up.
+          </p>
+          <p className="text-cream/85 mt-5 max-w-[26ch] text-lg leading-snug md:hidden">
+            Worship, word, and altar for grades 6–12. Same Spirit.
           </p>
         </Container>
       </section>
@@ -63,7 +66,7 @@ export default async function YouthPage() {
                 <h2 className="u-display-dramatic text-ink text-[clamp(2rem,5vw,3.75rem)]">
                   {camp.title}
                 </h2>
-                <p className="text-stone mt-5 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+                <p className="text-stone mt-5 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
                   {camp.description}
                 </p>
                 <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -83,7 +86,7 @@ export default async function YouthPage() {
                 </div>
               </div>
 
-              <aside className="bg-paper rounded-[var(--radius-lg)] border border-[color:var(--nh-border)] p-6 md:p-8">
+              <aside className="bg-paper order-first rounded-[var(--radius-lg)] border border-[color:var(--nh-border)] p-6 md:order-none md:p-8">
                 <p className="u-eyebrow text-fog">When</p>
                 <p className="u-display-soft text-ink mt-3 text-[clamp(1.5rem,3vw,2rem)] leading-tight">
                   {eventDateLong(camp.start_at)}
@@ -113,10 +116,14 @@ export default async function YouthPage() {
                 <h2 className="u-display-dramatic text-cream mt-4 text-[clamp(1.75rem,4.5vw,3rem)]">
                   One camper goes free.
                 </h2>
-                <p className="text-cream/80 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+                <p className="text-cream/80 mt-6 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
                   Every year we raffle off a full scholarship to Youth Camp — no-cost,
                   no-strings. Enter through the link; winner announced live at the Sunday
                   service on {eventDateLong(raffleDrawing.start_at)}.
+                </p>
+                <p className="text-cream/80 mt-4 text-lg leading-snug md:hidden">
+                  A full Youth Camp scholarship. Drawn{" "}
+                  {eventDateLong(raffleDrawing.start_at)}.
                 </p>
               </div>
               <div className="flex flex-col items-start gap-3">
@@ -140,12 +147,16 @@ export default async function YouthPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
             Youth meets with the house.
           </h2>
-          <p className="text-ink mt-8 text-lg leading-relaxed md:text-xl">
+          <p className="text-ink mt-8 hidden text-lg leading-relaxed md:block md:text-xl">
             Youth Army worships + receives with the whole Church on Sundays and
             Wednesdays, and gathers separately for retreats, encounter weekends, and Youth
             Camp each summer. Students sit in main service — we don&rsquo;t pull them out
             for a separate track every week. They need the whole house as much as the
             whole house needs them.
+          </p>
+          <p className="text-ink mt-5 text-lg leading-snug md:hidden">
+            Sundays and Wednesdays with the whole house. Retreats, encounter weekends, and
+            camp on their own.
           </p>
           <p className="text-stone mt-6 text-lg italic">
             &ldquo;Let no one despise you for your youth, but set the believers an
@@ -161,7 +172,11 @@ export default async function YouthPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
             We work with you, not around you.
           </h2>
-          <p className="text-ink mt-8 leading-relaxed md:text-xl">
+          <p className="text-ink mt-5 text-lg leading-snug md:hidden">
+            Every leader background-checked. Every trip with consent forms. Every teaching
+            what the house preaches.
+          </p>
+          <p className="text-ink mt-8 hidden leading-relaxed md:block md:text-xl">
             Every Youth Army leader is background-checked. Every trip has parent consent
             forms. Every teaching aligns with what the house preaches — we aren&rsquo;t
             running a parallel doctrine. If you have questions, concerns, or want to meet

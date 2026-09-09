@@ -23,7 +23,7 @@ export function PageHero({
   size = "md",
   titleMaxCh = 16,
 }: {
-  eyebrow: string;
+  eyebrow: ReactNode;
   title: ReactNode;
   lead?: ReactNode;
   /** One line for phones; `lead` then shows only from `md` up. */

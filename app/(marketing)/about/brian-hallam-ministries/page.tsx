@@ -12,7 +12,7 @@ import { SermonPlayer } from "@/components/sermons/SermonPlayer";
 import { BookFeature } from "@/components/sections/BookFeature";
 import { CHURCH } from "@/lib/constants/church";
 import { BHM, BOOK } from "@/lib/constants/bhm";
-import { MEDIA } from "@/lib/constants/media";
+import { MEDIA, type Photo } from "@/lib/constants/media";
 import { getLatestUpload } from "@/lib/youtube/latest";
 import { formatDate } from "@/lib/utils/format";
 
@@ -29,6 +29,9 @@ interface Room {
   title: string;
   body: string;
   cta: { label: string; href: string; external?: boolean };
+  /** Phones lead each room with its picture. */
+  photo: Photo;
+  photoPosition?: string;
 }
 
 const ROOMS: ReadonlyArray<Room> = [
@@ -37,18 +40,24 @@ const ROOMS: ReadonlyArray<Room> = [
     title: "The word, beyond the Sunday pulpit.",
     body: "Apostle Brian's itinerary, conference sessions, and teaching drops — the same apostolic word carried to other houses and other cities.",
     cta: { label: "brianhallam.com", href: BHM.url, external: true },
+    photo: MEDIA.pulpit,
+    photoPosition: "70% 30%",
   },
   {
     eyebrow: "The podcast",
     title: `${BHM.podcast.title}.`,
     body: "Longer-form conversations, teaching drops, and prophetic dialogue — on Apple Podcasts, Spotify, YouTube, and RSS.",
     cta: { label: "Every episode", href: "/podcasts#brian-hallam-podcast" },
+    photo: MEDIA.podcast,
+    photoPosition: "60% 30%",
   },
   {
     eyebrow: "The book",
     title: `${BOOK.title}.`,
     body: BOOK.summary,
     cta: { label: "Order the book", href: BOOK.buy.direct, external: true },
+    photo: BOOK.cover,
+    photoPosition: "50% 22%",
   },
 ];
 
@@ -92,7 +101,12 @@ export default async function BrianHallamMinistriesPage() {
       />
 
       <PageHero
-        eyebrow={`A parallel ministry · ${CHURCH.leadership.seniorPastor}`}
+        eyebrow={
+          <>
+            A parallel ministry
+            <span className="hidden sm:inline"> · {CHURCH.leadership.seniorPastor}</span>
+          </>
+        }
         title="Brian Hallam Ministries."
         titleMaxCh={14}
         lead={BHM.blurb}
@@ -128,7 +142,7 @@ export default async function BrianHallamMinistriesPage() {
             <h2 className="u-display-dramatic text-ink max-w-[16ch] text-[clamp(2.25rem,4.5vw,3.5rem)]">
               Fire that travels.
             </h2>
-            <p className="text-stone max-w-[40rem] text-lg">
+            <p className="text-stone hidden max-w-[40rem] text-lg md:block">
               {BHM.name} is the apostolic teaching ministry of{" "}
               {CHURCH.leadership.seniorPastor} — everything that orbits the pulpit of New
               Heights and carries beyond it, laboring for the endtime harvest of souls.
@@ -141,6 +155,16 @@ export default async function BrianHallamMinistriesPage() {
                 key={room.eyebrow}
                 className="border-t border-[color:var(--nh-gold)] pt-5 md:pt-6"
               >
+                <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-[var(--radius)] md:hidden">
+                  <Image
+                    src={room.photo.src}
+                    alt=""
+                    fill
+                    sizes="100vw"
+                    className="object-cover"
+                    style={{ objectPosition: room.photoPosition }}
+                  />
+                </div>
                 <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">
                   {room.eyebrow}
                 </p>
@@ -192,7 +216,7 @@ export default async function BrianHallamMinistriesPage() {
               <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
                 Fresh from Apostle Brian.
               </h2>
-              <p className="text-stone mt-5 text-lg leading-relaxed">
+              <p className="text-stone mt-5 hidden text-lg leading-relaxed md:block">
                 New teaching lands on YouTube through the week, and the podcast is on
                 whichever app you already use.
               </p>
@@ -222,7 +246,7 @@ export default async function BrianHallamMinistriesPage() {
               </Link>
             </div>
 
-            <div>
+            <div className="order-first md:order-none">
               {latest ? (
                 <>
                   <div className="flex items-baseline justify-between gap-4">
@@ -299,7 +323,7 @@ export default async function BrianHallamMinistriesPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
             Stay close to the word.
           </h2>
-          <p className="text-stone mx-auto mt-5 max-w-[46ch] text-lg leading-relaxed">
+          <p className="text-stone mx-auto mt-5 hidden max-w-[46ch] text-lg leading-relaxed md:block">
             Announcements, itinerary, and teaching clips — where Apostle Brian posts them.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">

@@ -70,8 +70,11 @@ export default async function EventsPage({ searchParams }: PageProps) {
           </h1>
           <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
             Classes, conferences, worship nights, Youth Army camp, and everything in
-            between. The Sunday altar is always the main event — but a lot happens around
-            it.
+            between.
+            <span className="hidden md:inline">
+              {" "}
+              The Sunday altar is always the main event — but a lot happens around it.
+            </span>
           </p>
         </Container>
       </section>

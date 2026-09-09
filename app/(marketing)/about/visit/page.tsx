@@ -6,6 +6,7 @@ import { breadcrumbSchema, jsonLdScript, localBusinessSchema } from "@/lib/seo/s
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { AscendingBars } from "@/components/brand/AscendingBars";
+import { MobileFolds } from "@/components/ui/MobileFolds";
 import { CHURCH } from "@/lib/constants/church";
 import { MEDIA } from "@/lib/constants/media";
 
@@ -57,10 +58,13 @@ export default function VisitPage() {
           <h1 className="u-display-dramatic text-cream mt-7 max-w-[16ch] text-[clamp(2.5rem,6vw,5.5rem)]">
             We&rsquo;ll look for you.
           </h1>
-          <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/85 mt-6 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
             Everything you need to walk in confident. Address, parking, children, timing,
             and what to expect. If we miss anything below, tell a greeter and
             they&rsquo;ll get you there.
+          </p>
+          <p className="text-cream/85 mt-5 max-w-[28ch] text-lg leading-snug md:hidden">
+            Address, parking, children, timing — everything to walk in confident.
           </p>
           <div className="mt-9 flex flex-wrap gap-3">
             <Button variant="gold" size="lg" href={mapHref} external>
@@ -118,7 +122,7 @@ export default function VisitPage() {
               </dl>
             </div>
 
-            <figure className="u-frame-gold relative aspect-[4/3] overflow-hidden rounded-[var(--radius-lg)]">
+            <figure className="u-frame-gold relative order-first aspect-[4/3] overflow-hidden rounded-[var(--radius-lg)] md:order-none">
               <Image
                 src={MEDIA.campus.src}
                 alt={MEDIA.campus.alt}
@@ -162,7 +166,28 @@ export default function VisitPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
             How to walk in.
           </h2>
-          <div className="text-ink mt-10 space-y-6 text-lg leading-relaxed md:text-xl">
+          <MobileFolds
+            className="mt-8"
+            items={[
+              {
+                title: "Parking",
+                body: "Free on-site lot. Park anywhere and walk straight to the front doors.",
+              },
+              {
+                title: "Check-in",
+                body: "Young Lions check-in opens at 9:30 AM. Your child gets a tag; you get the matching one.",
+              },
+              {
+                title: "Seating",
+                body: "Sit wherever you like. Nobody will call you out. Stay for the altar.",
+              },
+              {
+                title: "The altar",
+                body: "Come forward, stay seated, kneel, raise your hands — whatever is yours to do.",
+              },
+            ]}
+          />
+          <div className="text-ink mt-10 hidden space-y-6 text-lg leading-relaxed md:block md:text-xl">
             <p>
               <span className="font-display block text-2xl">Parking.</span>
               Free on-site lot. Greeters hold space by the front doors; pull in, park

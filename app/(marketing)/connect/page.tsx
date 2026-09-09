@@ -99,7 +99,7 @@ function CrossLink({
     >
       <p className={`u-eyebrow ${ink[tone]}`}>{kicker}</p>
       <h3 className="font-display text-ink mt-3 text-2xl leading-tight">{title}</h3>
-      <p className="text-stone mt-3 leading-relaxed">{body}</p>
+      <p className="text-stone mt-3 hidden leading-relaxed md:block">{body}</p>
       <span
         aria-hidden="true"
         className={`mt-5 inline-flex items-center gap-2 text-sm font-semibold ${ink[tone]}`}

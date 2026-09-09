@@ -100,10 +100,13 @@ export default function GrowHubPage() {
           <h1 className="u-display-dramatic text-cream mt-7 max-w-[14ch] text-[clamp(2.75rem,6.5vw,6rem)]">
             Grow.
           </h1>
-          <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/85 mt-6 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
             Discipleship at New Heights isn't a feeling — it's a path. Seven rooms: saved,
             baptized, filled, planted, formed, gathered in community, sent back out. Pick
             the room in front of you.
+          </p>
+          <p className="text-cream/85 mt-5 max-w-[26ch] text-lg leading-snug md:hidden">
+            Seven rooms. Pick the one in front of you.
           </p>
         </Container>
       </section>
@@ -125,7 +128,7 @@ export default function GrowHubPage() {
                 <Link
                   href={step.href}
                   className={cn(
-                    "group grid gap-6 py-10 md:grid-cols-[0.35fr_1.65fr] md:gap-12 md:py-14",
+                    "group grid grid-cols-[3.5rem_1fr] gap-4 py-6 md:grid-cols-[0.35fr_1.65fr] md:gap-12 md:py-14",
                     "transition-colors hover:bg-[color:var(--nh-bone)]/50",
                   )}
                 >
@@ -146,7 +149,7 @@ export default function GrowHubPage() {
                     <h3 className="u-display-soft text-ink mt-2 text-[clamp(1.5rem,3vw,2.25rem)] leading-tight">
                       {step.step}
                     </h3>
-                    <p className="text-stone mt-4 max-w-[60ch] leading-relaxed md:text-lg">
+                    <p className="text-stone mt-4 hidden max-w-[60ch] leading-relaxed md:block md:text-lg">
                       {step.blurb}
                     </p>
                     <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--nh-scarlet-ink)]">

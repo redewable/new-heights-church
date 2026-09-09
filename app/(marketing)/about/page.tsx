@@ -78,8 +78,12 @@ export default function AboutHubPage() {
               <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(2rem,5vw,3.5rem)]">
                 Planted for this region, by this region.
               </h2>
+              <p className="text-ink mt-6 text-lg leading-snug md:hidden">
+                Planted in {CHURCH.founded} with a burden for souls. Worship lifts, the
+                Word lands, the altar stays open — this is a move of God.
+              </p>
               <div className="text-ink mt-10 max-w-[60ch] space-y-6 text-lg leading-relaxed md:text-xl">
-                <p>
+                <p className="hidden md:block">
                   {CHURCH.leadership.seniorPastor} and {CHURCH.leadership.firstLady}{" "}
                   planted New Heights in the Brazos Valley in {CHURCH.founded} with a
                   burden for souls and an unshakable conviction that the Word of God still
@@ -103,7 +107,7 @@ export default function AboutHubPage() {
               </div>
             </div>
 
-            <figure className="u-frame-gold relative mx-auto aspect-[4/5] w-full max-w-[22rem] overflow-hidden rounded-[var(--radius-lg)] md:sticky md:top-32 md:max-w-none">
+            <figure className="u-frame-gold relative order-first mx-auto aspect-[4/5] w-full max-w-[22rem] overflow-hidden rounded-[var(--radius-lg)] md:sticky md:top-32 md:order-none md:max-w-none">
               <Image
                 src={MEDIA.pastors.src}
                 alt={MEDIA.pastors.alt}
@@ -180,7 +184,9 @@ export default function AboutHubPage() {
                 <h3 className="font-display text-ink text-2xl leading-tight md:text-3xl">
                   {l.title}
                 </h3>
-                <p className="text-stone mt-4 leading-relaxed">{l.blurb}</p>
+                <p className="text-stone mt-4 hidden leading-relaxed md:block">
+                  {l.blurb}
+                </p>
                 <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--nh-scarlet-ink)]">
                   <span
                     aria-hidden="true"

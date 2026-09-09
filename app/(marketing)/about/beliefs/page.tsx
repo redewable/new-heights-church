@@ -47,6 +47,7 @@ export default function BeliefsPage() {
             on.
           </>
         }
+        leadShort="The Church's own statements — the doctrinal ground of the house."
       />
 
       {/* ---- Our purpose ---- */}
@@ -104,7 +105,10 @@ export default function BeliefsPage() {
               >
                 Where it all gets walked out.
               </h2>
-              <p className="text-stone mt-5 max-w-[52ch] text-lg leading-relaxed md:text-xl">
+              <p className="text-stone mt-4 text-lg leading-snug md:hidden">
+                The three things this house is about right now.
+              </p>
+              <p className="text-stone mt-5 hidden max-w-[52ch] text-lg leading-relaxed md:block md:text-xl">
                 The values above get embodied in the three things this house is about
                 right now. See{" "}
                 <Link
@@ -115,7 +119,7 @@ export default function BeliefsPage() {
                 </Link>{" "}
                 for how we walk them out, one Sunday at a time.
               </p>
-              <p className="text-fog mt-8 text-sm">
+              <p className="text-fog mt-8 hidden text-sm md:block">
                 For a printed copy of the statement of faith — for elders, group leaders,
                 or anyone vetting our doctrine before visiting — contact{" "}
                 <a

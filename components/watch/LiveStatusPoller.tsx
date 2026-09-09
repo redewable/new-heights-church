@@ -159,9 +159,12 @@ function OfflinePanel({ unavailable }: { unavailable: boolean }) {
         </h1>
 
         <p className="text-cream/85 mt-6 max-w-[42rem] text-lg leading-relaxed md:text-xl">
-          Every Sunday at 10 AM and Wednesday at 7 PM we stream from the house. This page
-          goes live the moment worship starts. Until then, watch the latest service below
-          or subscribe on YouTube so you never miss one.
+          Every Sunday at 10 AM and Wednesday at 7 PM we stream from the house.
+          <span className="hidden md:inline">
+            {" "}
+            This page goes live the moment worship starts. Until then, watch the latest
+            service below or subscribe on YouTube so you never miss one.
+          </span>
         </p>
 
         <div className="mt-8 flex flex-wrap items-center gap-3">

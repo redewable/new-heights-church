@@ -148,7 +148,7 @@ function ShowBlock({ show, latest }: { show: PodcastShow; latest: LatestUpload |
         ) : null}
       </div>
 
-      <aside className="flex flex-col gap-4">
+      <aside className="order-first flex flex-col gap-4 md:order-none">
         {latest ? (
           <LatestEpisode latest={latest} />
         ) : show.cover ? (

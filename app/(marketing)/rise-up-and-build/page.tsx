@@ -4,6 +4,7 @@ import { breadcrumbSchema, jsonLdScript } from "@/lib/seo/schema";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { AscendingBars } from "@/components/brand/AscendingBars";
+import { FaqList } from "@/components/ui/FaqList";
 import { PledgeForm } from "@/components/forms/PledgeForm";
 import {
   formatUSD,
@@ -84,8 +85,11 @@ export default async function RiseUpPage() {
             <br />
             <span className="text-[color:var(--nh-gold)]">And build.</span>
           </h1>
-          <p className="text-cream/85 mt-7 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/85 mt-7 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
             {campaign.blurb}
+          </p>
+          <p className="text-cream/85 mt-5 max-w-[26ch] text-lg leading-snug md:hidden">
+            More room for the harvest we can already see.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button variant="gold" size="lg" href="#pledge">
@@ -163,12 +167,16 @@ export default async function RiseUpPage() {
             We are not building for us.
           </h2>
           <div className="text-ink mt-8 space-y-6 text-lg leading-relaxed md:text-xl">
-            <p>
+            <p className="md:hidden">
+              The house is already too small for what the Lord is doing. More seats, more
+              classrooms, more altar room.
+            </p>
+            <p className="hidden md:block">
               The house we meet in is already too small for what the Lord is doing. Every
               Sunday the altar runs long. Every midweek, the room fills. Conferences are
               outgrowing the footprint.
             </p>
-            <p>
+            <p className="hidden md:block">
               Rise Up and Build is how we answer. It isn&rsquo;t a building fund for a
               building&rsquo;s sake — it&rsquo;s a preparation for a harvest we can
               already see. More seats, more classrooms, more altar room, more capacity to
@@ -198,10 +206,13 @@ export default async function RiseUpPage() {
           >
             Tell us what the Lord said.
           </h2>
-          <p className="text-stone mt-6 text-lg leading-relaxed">
+          <p className="text-stone mt-6 hidden text-lg leading-relaxed md:block">
             Commit a number and a frequency. We&rsquo;ll email you a Pushpay link to set
             up the actual gift whenever you&rsquo;re ready — the pledge itself is sacred,
             but not binding. We trust you; the Lord keeps score.
+          </p>
+          <p className="text-stone mt-5 text-lg leading-snug md:hidden">
+            A number and a frequency. Sacred, not binding.
           </p>
           <div className="mt-12">
             <PledgeForm
@@ -225,19 +236,7 @@ export default async function RiseUpPage() {
           >
             Before you pledge.
           </h2>
-          <dl className="mt-10 divide-y divide-[color:var(--nh-border)]">
-            {FAQ.map((f) => (
-              <div
-                key={f.q}
-                className="grid gap-3 py-7 md:grid-cols-[1fr_1.5fr] md:gap-10"
-              >
-                <dt className="font-display text-ink text-lg leading-snug md:text-xl">
-                  {f.q}
-                </dt>
-                <dd className="text-stone leading-relaxed">{f.a}</dd>
-              </div>
-            ))}
-          </dl>
+          <FaqList items={FAQ} className="mt-10" />
           <p className="text-fog mt-10 text-sm">
             Anything else? Email{" "}
             <a

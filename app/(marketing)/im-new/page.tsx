@@ -6,6 +6,7 @@ import { breadcrumbSchema, jsonLdScript } from "@/lib/seo/schema";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/ui/PageHero";
+import { FaqList } from "@/components/ui/FaqList";
 import { ConnectCardForm } from "@/components/forms/ConnectCardForm";
 import { CHURCH } from "@/lib/constants/church";
 import { MEDIA } from "@/lib/constants/media";
@@ -222,37 +223,7 @@ export default function ImNewPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
             Straight answers.
           </h2>
-          {/* Desktop: question beside answer. */}
-          <dl className="mt-10 hidden divide-y divide-[color:var(--nh-border)] md:block">
-            {FAQ.map((f) => (
-              <div
-                key={f.q}
-                className="grid gap-3 py-7 md:grid-cols-[1fr_1.4fr] md:gap-10"
-              >
-                <dt className="font-display text-ink text-lg leading-snug md:text-xl">
-                  {f.q}
-                </dt>
-                <dd className="text-stone leading-relaxed">{f.a}</dd>
-              </div>
-            ))}
-          </dl>
-          {/* Phones: questions as tappable rows; the answer opens beneath. */}
-          <div className="mt-8 divide-y divide-[color:var(--nh-border)] md:hidden">
-            {FAQ.map((f) => (
-              <details key={f.q} className="group py-4">
-                <summary className="font-display text-ink flex cursor-pointer list-none items-center justify-between gap-4 text-lg leading-snug [&::-webkit-details-marker]:hidden">
-                  {f.q}
-                  <span
-                    aria-hidden="true"
-                    className="text-[color:var(--nh-gold-ink)] transition-transform group-open:rotate-45"
-                  >
-                    +
-                  </span>
-                </summary>
-                <p className="text-stone mt-3 leading-relaxed">{f.a}</p>
-              </details>
-            ))}
-          </div>
+          <FaqList items={FAQ} ratio="1fr_1.4fr" className="mt-10" />
         </Container>
       </section>
 

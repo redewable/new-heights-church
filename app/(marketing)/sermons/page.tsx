@@ -74,9 +74,12 @@ export default async function SermonsPage({ searchParams }: Params) {
             Sermons.
           </h1>
           <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
-            Every Sunday word and Wednesday pouring-out, tagged, searchable, and ready to
-            carry. Filter by the three pillars, a series, a scripture, or just the hunger
-            that brought you here.
+            Every Sunday word and Wednesday pouring-out, ready to carry.
+            <span className="hidden md:inline">
+              {" "}
+              Filter by the three pillars, a series, a scripture, or just the hunger that
+              brought you here.
+            </span>
           </p>
         </Container>
       </section>

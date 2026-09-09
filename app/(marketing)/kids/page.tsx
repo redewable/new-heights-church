@@ -79,10 +79,13 @@ export default function KidsPage() {
           <h1 className="u-display-dramatic text-cream mt-7 max-w-[14ch] text-[clamp(2.75rem,7vw,6.5rem)]">
             Young Lions.
           </h1>
-          <p className="text-cream/85 mt-6 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/85 mt-6 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
             We are not running a babysitting service while the parents get fed. Young
             Lions has its own worship, its own teaching, its own altar. We take the next
             generation seriously — because Jesus did.
+          </p>
+          <p className="text-cream/85 mt-5 max-w-[26ch] text-lg leading-snug md:hidden">
+            Its own worship, its own teaching, its own altar.
           </p>
           <p className="text-cream/60 mt-4 max-w-[44ch] text-sm">
             &ldquo;Let the little children come to me, and do not hinder them, for to such
@@ -98,17 +101,19 @@ export default function KidsPage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
             Three rooms, one mission.
           </h2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3 md:gap-8">
+          <div className="mt-10 grid grid-cols-3 gap-3 md:grid-cols-3 md:gap-8">
             {AGE_ROOMS.map((r) => (
               <article
                 key={r.range}
-                className="bg-paper rounded-[var(--radius-lg)] border border-[color:var(--nh-border)] p-6 md:p-8"
+                className="bg-paper rounded-[var(--radius-lg)] border border-[color:var(--nh-border)] p-4 md:p-8"
               >
                 <p className="u-eyebrow text-fog">{r.label}</p>
-                <h3 className="font-display text-ink mt-3 text-2xl md:text-3xl">
+                <h3 className="font-display text-ink mt-2 text-lg md:mt-3 md:text-3xl">
                   {r.range}
                 </h3>
-                <p className="text-stone mt-4 leading-relaxed">{r.body}</p>
+                <p className="text-stone mt-4 hidden leading-relaxed md:block">
+                  {r.body}
+                </p>
               </article>
             ))}
           </div>
@@ -178,7 +183,7 @@ export default function KidsPage() {
           >
             Four non-negotiables.
           </h2>
-          <p className="text-stone mt-6 max-w-[52ch] text-lg md:text-xl">
+          <p className="text-stone mt-6 hidden max-w-[52ch] text-lg md:block md:text-xl">
             Every policy below is in force in every room, every week. If any detail below
             ever feels off on a Sunday, tell a pastor immediately — this is the most
             important thing we do.
@@ -191,7 +196,7 @@ export default function KidsPage() {
                 className="bg-paper rounded-[var(--radius-lg)] border border-[color:var(--nh-border)] p-6 md:p-7"
               >
                 <h3 className="font-display text-ink text-xl">{s.t}</h3>
-                <p className="text-stone mt-3 leading-relaxed">{s.b}</p>
+                <p className="text-stone mt-3 hidden leading-relaxed md:block">{s.b}</p>
               </li>
             ))}
           </ul>
@@ -200,7 +205,17 @@ export default function KidsPage() {
             <p className="u-eyebrow text-[color:var(--nh-scarlet-ink)]">
               Child protection statement
             </p>
-            <p className="text-ink mt-3 leading-relaxed md:text-lg">
+            <p className="text-ink mt-3 leading-relaxed md:hidden">
+              Zero tolerance for abuse. Every incident is reported to civil authorities.{" "}
+              <Link
+                href="/legal/child-protection"
+                className="font-semibold text-[color:var(--nh-scarlet-ink)] underline-offset-4 hover:underline"
+              >
+                Read the full policy
+              </Link>
+              .
+            </p>
+            <p className="text-ink mt-3 hidden leading-relaxed md:block md:text-lg">
               New Heights Church has zero tolerance for abuse of any kind. All incidents
               are reported to appropriate civil authorities. The full child protection
               policy is available on request — read it in full at{" "}

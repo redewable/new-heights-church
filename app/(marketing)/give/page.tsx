@@ -5,6 +5,7 @@ import { breadcrumbSchema, jsonLdScript } from "@/lib/seo/schema";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { AscendingBars } from "@/components/brand/AscendingBars";
+import { FaqList } from "@/components/ui/FaqList";
 import { CAMPAIGNS, GIVING, pushpayHref } from "@/lib/constants/giving";
 import { CHURCH } from "@/lib/constants/church";
 
@@ -79,9 +80,12 @@ export default function GivePage() {
           <h1 className="u-display-dramatic text-cream mt-7 max-w-[16ch] text-[clamp(2.75rem,6.5vw,6rem)]">
             Generosity is <span className="text-[color:var(--nh-gold)]">soil</span>.
           </h1>
-          <p className="text-cream/85 mt-7 max-w-[44ch] text-lg leading-relaxed md:text-xl">
+          <p className="text-cream/85 mt-7 hidden max-w-[44ch] text-lg leading-relaxed md:block md:text-xl">
             Every seat filled, every soul saved, every building raised grows in it. We
             never touch your card. Each gift is receipted. Here are the five ways to give.
+          </p>
+          <p className="text-cream/85 mt-5 max-w-[26ch] text-lg leading-snug md:hidden">
+            Five ways to give. We never touch your card.
           </p>
           <div className="mt-9 flex flex-wrap items-center gap-3">
             <Button variant="gold" size="lg" href={pushpayHref("give-hero")} external>
@@ -183,6 +187,15 @@ export default function GivePage() {
                   </address>
                 </>
               }
+              mobileBody={
+                <address className="u-display-soft text-ink block text-lg not-italic">
+                  {CHURCH.name}
+                  <br />
+                  {CHURCH.address.street}
+                  <br />
+                  {CHURCH.address.city}, {CHURCH.address.region} {CHURCH.address.postal}
+                </address>
+              }
             />
 
             {/* 5. In person */}
@@ -239,11 +252,14 @@ export default function GivePage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.5rem)]">
             Every gift is receipted.
           </h2>
-          <p className="text-stone mt-6 text-lg leading-relaxed">
+          <p className="text-stone mt-6 hidden text-lg leading-relaxed md:block">
             Online and crypto receipts fire automatically at the time of the gift. Stock
             gifts receive a letter from the Church after the transfer settles. For a
             consolidated year-end statement that merges every channel, request it below
             and we'll send it within five business days.
+          </p>
+          <p className="text-stone mt-5 text-lg leading-snug md:hidden">
+            Receipts are automatic. Year-end statements on request.
           </p>
           <div className="mt-8">
             <Button variant="secondary" href="/give/statement">
@@ -260,19 +276,7 @@ export default function GivePage() {
           <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.5rem)]">
             Straight answers on giving.
           </h2>
-          <dl className="mt-10 divide-y divide-[color:var(--nh-border)]">
-            {FAQ.map((f) => (
-              <div
-                key={f.q}
-                className="grid gap-3 py-7 md:grid-cols-[1fr_1.5fr] md:gap-10"
-              >
-                <dt className="font-display text-ink text-lg leading-snug md:text-xl">
-                  {f.q}
-                </dt>
-                <dd className="text-stone leading-relaxed">{f.a}</dd>
-              </div>
-            ))}
-          </dl>
+          <FaqList items={FAQ} className="mt-10" />
         </Container>
       </section>
 
@@ -307,6 +311,7 @@ function GivingMethodRow({
   label,
   title,
   body,
+  mobileBody,
   cta,
   footer,
 }: {
@@ -314,6 +319,8 @@ function GivingMethodRow({
   label: string;
   title: string;
   body: React.ReactNode;
+  /** What a phone shows under the title — nothing by default; the title and button carry it. */
+  mobileBody?: React.ReactNode;
   cta?: {
     label: string;
     href: string;
@@ -338,9 +345,10 @@ function GivingMethodRow({
         <h3 className="u-display-soft text-ink text-[clamp(1.5rem,3vw,2.25rem)] leading-tight">
           {title}
         </h3>
-        <div className="text-stone mt-4 text-lg leading-relaxed md:text-xl">
+        <div className="text-stone mt-4 hidden text-lg leading-relaxed md:block md:text-xl">
           {typeof body === "string" ? <p>{body}</p> : body}
         </div>
+        {mobileBody ? <div className="mt-4 md:hidden">{mobileBody}</div> : null}
         {cta ? (
           <div className="mt-6">
             {cta.external ? (
@@ -393,7 +401,7 @@ function CampaignCard({
       <h3 className="font-display text-ink mt-3 text-2xl leading-tight md:text-3xl">
         {title}
       </h3>
-      <p className="text-stone mt-4 leading-relaxed">{blurb}</p>
+      <p className="text-stone mt-4 hidden leading-relaxed md:block">{blurb}</p>
       <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--nh-scarlet-ink)]">
         <span
           aria-hidden="true"

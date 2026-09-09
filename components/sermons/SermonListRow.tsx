@@ -80,7 +80,7 @@ export function SermonListRow({
         </h3>
 
         {sermon.description ? (
-          <p className="text-stone mt-3 max-w-[58ch] leading-relaxed">
+          <p className="text-stone mt-3 hidden max-w-[58ch] leading-relaxed md:block">
             {sermon.description}
           </p>
         ) : null}

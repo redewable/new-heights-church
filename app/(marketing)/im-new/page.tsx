@@ -128,21 +128,21 @@ export default function ImNewPage() {
               {[
                 {
                   num: "I",
-                  t: "Worship lifts",
-                  b: "The band plays. The room sings. You can sing, sit, stand — whatever your spirit wants to do. There is no wrong posture before the Lord.",
-                  s: "Sing, sit, stand — no wrong posture before the Lord.",
+                  t: "Praise and worship",
+                  b: "Worship looks like worship and praise looks like praise. We lift God up so He can come down.",
+                  s: "We lift God up so He can come down.",
                 },
                 {
                   num: "II",
-                  t: "The Word lands",
-                  b: `${CHURCH.leadership.seniorPastor} preaches. Expect the Word of God, expect directness, expect application that will cost you something. Bring a Bible and take notes.`,
-                  s: "Bring a Bible. Take notes. Expect it to cost you something.",
+                  t: "The message",
+                  b: `${CHURCH.leadership.seniorPastor} delivers a message from the Lord in alignment with His Word. Bring your Bible.`,
+                  s: "A message from the Lord, in alignment with His Word. Bring your Bible.",
                 },
                 {
                   num: "III",
-                  t: "The altar stays open",
-                  b: "We don't rush the response. Come forward, stay in your seat, kneel, raise your hands — do what's yours to do. The altar is where this house started and where it stays.",
-                  s: "Come forward or stay seated. A response, never a requirement.",
+                  t: "Prayer and salvation",
+                  b: "New Heights Church is a place where you can experience true hope and freedom. Anything is possible with God.",
+                  s: "True hope and freedom. Anything is possible with God.",
                 },
               ].map((s) => (
                 <li

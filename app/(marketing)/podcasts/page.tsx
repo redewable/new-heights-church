@@ -1,17 +1,16 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { buildMetadata } from "@/lib/seo/metadata";
 import { breadcrumbSchema, jsonLdScript } from "@/lib/seo/schema";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/ui/PageHero";
-import { PlatformIcon, type Platform } from "@/components/brand/PlatformIcon";
+import type { Platform } from "@/components/brand/PlatformIcon";
 import { PlatformPill } from "@/components/ui/PlatformPill";
-import { SermonPlayer } from "@/components/sermons/SermonPlayer";
+import { LatestEpisode } from "@/components/podcast/LatestEpisode";
 import { CHURCH } from "@/lib/constants/church";
-import { MEDIA, type Photo } from "@/lib/constants/media";
+import { MEDIA } from "@/lib/constants/media";
 import { PODCASTS, type PodcastShow } from "@/lib/constants/podcasts";
 import { getLatestUpload, type LatestUpload } from "@/lib/youtube/latest";
-import { formatDate } from "@/lib/utils/format";
+import { getLatestEpisode, type PodcastEpisode } from "@/lib/podcast/feed";
 
 export const metadata: Metadata = buildMetadata({
   title: "Podcasts",
@@ -37,12 +36,16 @@ export default async function PodcastsPage() {
     url: `${CHURCH.urls.site}/podcasts#${p.slug}`,
   }));
 
-  // Newest upload per show, from each channel's public feed. Null on failure;
-  // the block falls back to the show's art.
+  // Newest episode per show: the channel's newest upload when YouTube's feed
+  // answers, the podcast RSS (title, date, audio) when it doesn't.
   const latest = await Promise.all(
-    PODCASTS.map((p) =>
-      p.youtubeChannelId ? getLatestUpload(p.youtubeChannelId) : Promise.resolve(null),
-    ),
+    PODCASTS.map(async (p) => {
+      const [video, audio] = await Promise.all([
+        p.youtubeChannelId ? getLatestUpload(p.youtubeChannelId) : null,
+        p.rssUrl ? getLatestEpisode(p.rssUrl) : null,
+      ]);
+      return { video, audio };
+    }),
   );
 
   return (
@@ -73,7 +76,12 @@ export default async function PodcastsPage() {
         <Container size="xl">
           <div className="divide-y divide-[color:var(--nh-border)]">
             {PODCASTS.map((p, i) => (
-              <ShowBlock key={p.slug} show={p} latest={latest[i] ?? null} />
+              <ShowBlock
+                key={p.slug}
+                show={p}
+                video={latest[i]?.video ?? null}
+                audio={latest[i]?.audio ?? null}
+              />
             ))}
           </div>
         </Container>
@@ -88,7 +96,15 @@ interface PlatformLink {
   href: string | null;
 }
 
-function ShowBlock({ show, latest }: { show: PodcastShow; latest: LatestUpload | null }) {
+function ShowBlock({
+  show,
+  video,
+  audio,
+}: {
+  show: PodcastShow;
+  video: LatestUpload | null;
+  audio: PodcastEpisode | null;
+}) {
   const platforms: PlatformLink[] = [
     { platform: "apple", label: "Apple Podcasts", href: show.appleUrl },
     { platform: "spotify", label: "Spotify", href: show.spotifyUrl },
@@ -148,103 +164,14 @@ function ShowBlock({ show, latest }: { show: PodcastShow; latest: LatestUpload |
         ) : null}
       </div>
 
+      {/* The episode leads on phones; the hero above already carries the art. */}
       <aside className="order-first flex flex-col gap-4 md:order-none">
-        {latest ? (
-          <LatestEpisode latest={latest} />
-        ) : show.cover ? (
-          <CoverCard show={show} cover={show.cover} />
-        ) : (
-          <div className="motif-altar-glow rounded-[var(--radius-lg)] border border-dashed border-[color:var(--nh-border)] bg-[color:var(--nh-bone)] p-8 text-center md:p-10">
-            <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">Latest episode</p>
-            <p className="text-ink u-display-soft mt-4 text-xl leading-snug">
-              The latest episode lands here once the show is on YouTube.
-            </p>
-          </div>
-        )}
-
+        <LatestEpisode video={video} audio={audio} youtubeUrl={show.youtubeUrl} />
         <p className="text-fog text-xs">
           Subscribe on whichever app you already use — the feed stays the same.
         </p>
       </aside>
     </article>
-  );
-}
-
-/** Newest upload from the show's channel: date, click-to-load player, title. */
-function LatestEpisode({ latest }: { latest: LatestUpload }) {
-  const watchUrl = `https://www.youtube.com/watch?v=${latest.videoId}`;
-  return (
-    <div>
-      <div className="flex items-baseline justify-between gap-4">
-        <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">Latest on YouTube</p>
-        <p className="text-fog text-sm whitespace-nowrap">
-          {formatDate(latest.publishedAt.slice(0, 10))}
-        </p>
-      </div>
-      <div className="mt-4">
-        <SermonPlayer
-          videoId={latest.videoId}
-          posterUrl={null}
-          title={latest.title}
-          kind="episode"
-        />
-      </div>
-      <h3 className="u-display-soft text-ink mt-4 text-lg leading-snug md:text-xl">
-        {latest.title}
-      </h3>
-      <a
-        href={watchUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-ink mt-2 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline"
-      >
-        <PlatformIcon platform="youtube" size={16} />
-        Open on YouTube
-        <span aria-hidden="true">↗</span>
-      </a>
-    </div>
-  );
-}
-
-/** Fallback when the channel feed can't be reached: the show's art, linked to YouTube. */
-function CoverCard({ show, cover }: { show: PodcastShow; cover: Photo }) {
-  const frame =
-    "group bg-ink block overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--nh-border)]";
-  const body = (
-    <>
-      <div className="aspect-video overflow-hidden">
-        <Image
-          src={cover.src}
-          alt={cover.alt}
-          width={cover.width}
-          height={cover.height}
-          sizes="(min-width: 768px) 52vw, 100vw"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-        />
-      </div>
-      <div className="bg-paper flex items-center justify-between gap-4 border-t border-[color:var(--nh-border)] px-5 py-3.5">
-        <span className="u-eyebrow text-[color:var(--nh-gold-ink)]">Latest episodes</span>
-        {show.youtubeUrl ? (
-          <span className="text-ink text-sm font-semibold whitespace-nowrap">
-            Watch on YouTube <span aria-hidden="true">↗</span>
-          </span>
-        ) : null}
-      </div>
-    </>
-  );
-
-  return show.youtubeUrl ? (
-    <a
-      href={show.youtubeUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${show.title} on YouTube`}
-      className={frame}
-    >
-      {body}
-    </a>
-  ) : (
-    <div className={frame}>{body}</div>
   );
 }
 

@@ -7,14 +7,13 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/ui/PageHero";
 import { PlatformPill } from "@/components/ui/PlatformPill";
-import { PlatformIcon } from "@/components/brand/PlatformIcon";
-import { SermonPlayer } from "@/components/sermons/SermonPlayer";
+import { LatestEpisode } from "@/components/podcast/LatestEpisode";
 import { BookFeature } from "@/components/sections/BookFeature";
 import { CHURCH } from "@/lib/constants/church";
 import { BHM, BOOK } from "@/lib/constants/bhm";
 import { MEDIA, type Photo } from "@/lib/constants/media";
 import { getLatestUpload } from "@/lib/youtube/latest";
-import { formatDate } from "@/lib/utils/format";
+import { getLatestEpisode } from "@/lib/podcast/feed";
 
 const PATH = "/about/brian-hallam-ministries";
 
@@ -25,17 +24,23 @@ export const metadata: Metadata = buildMetadata({
 });
 
 interface Room {
+  kind: "preaching" | "podcast" | "book";
   eyebrow: string;
   title: string;
   body: string;
   cta: { label: string; href: string; external?: boolean };
-  /** Phones lead each room with its picture. */
-  photo: Photo;
+  /**
+   * Phones lead each room with its picture. The podcast room leads with
+   * the latest episode instead — its art already fronts /podcasts, and the
+   * episode is the thing worth seeing.
+   */
+  photo?: Photo;
   photoPosition?: string;
 }
 
 const ROOMS: ReadonlyArray<Room> = [
   {
+    kind: "preaching",
     eyebrow: "Preaching & teaching",
     title: "The word, beyond the Sunday pulpit.",
     body: "Apostle Brian's itinerary, conference sessions, and teaching drops — the same apostolic word carried to other houses and other cities.",
@@ -44,14 +49,14 @@ const ROOMS: ReadonlyArray<Room> = [
     photoPosition: "70% 30%",
   },
   {
+    kind: "podcast",
     eyebrow: "The podcast",
     title: `${BHM.podcast.title}.`,
     body: "Longer-form conversations, teaching drops, and prophetic dialogue — on Apple Podcasts, Spotify, YouTube, and RSS.",
     cta: { label: "Every episode", href: "/podcasts#brian-hallam-podcast" },
-    photo: MEDIA.podcast,
-    photoPosition: "60% 30%",
   },
   {
+    kind: "book",
     eyebrow: "The book",
     title: `${BOOK.title}.`,
     body: BOOK.summary,
@@ -67,7 +72,10 @@ const ROOMS: ReadonlyArray<Room> = [
  * itinerary site, the podcast, the channel, the book, and his own accounts.
  */
 export default async function BrianHallamMinistriesPage() {
-  const latest = await getLatestUpload(BHM.youtubeChannelId);
+  const [video, audio] = await Promise.all([
+    getLatestUpload(BHM.youtubeChannelId),
+    getLatestEpisode(BHM.podcast.rss),
+  ]);
 
   const bc = breadcrumbSchema([
     { name: "Home", href: "/" },
@@ -88,6 +96,15 @@ export default async function BrianHallamMinistriesPage() {
       BHM.podcast.spotify,
     ],
   };
+
+  const pills = (
+    <>
+      <PlatformPill platform="apple" label="Apple Podcasts" href={BHM.podcast.apple} />
+      <PlatformPill platform="spotify" label="Spotify" href={BHM.podcast.spotify} />
+      <PlatformPill platform="youtube" label="YouTube" href={BHM.youtube} />
+      <PlatformPill platform="rss" label="RSS feed" href={BHM.podcast.rss} />
+    </>
+  );
 
   return (
     <>
@@ -152,19 +169,26 @@ export default async function BrianHallamMinistriesPage() {
           <ul className="mt-12 grid gap-x-8 gap-y-10 md:grid-cols-3 lg:gap-x-10">
             {ROOMS.map((room) => (
               <li
-                key={room.eyebrow}
+                key={room.kind}
                 className="border-t border-[color:var(--nh-gold)] pt-5 md:pt-6"
               >
-                <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-[var(--radius)] md:hidden">
-                  <Image
-                    src={room.photo.src}
-                    alt=""
-                    fill
-                    sizes="100vw"
-                    className="object-cover"
-                    style={{ objectPosition: room.photoPosition }}
-                  />
-                </div>
+                {room.kind === "podcast" ? (
+                  <div className="mb-5 md:hidden">
+                    <LatestEpisode video={video} audio={audio} youtubeUrl={BHM.youtube} />
+                    <div className="mt-4 flex flex-wrap gap-2">{pills}</div>
+                  </div>
+                ) : room.photo ? (
+                  <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-[var(--radius)] md:hidden">
+                    <Image
+                      src={room.photo.src}
+                      alt=""
+                      fill
+                      sizes="100vw"
+                      className="object-cover"
+                      style={{ objectPosition: room.photoPosition }}
+                    />
+                  </div>
+                ) : null}
                 <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">
                   {room.eyebrow}
                 </p>
@@ -205,8 +229,8 @@ export default async function BrianHallamMinistriesPage() {
         </Container>
       </section>
 
-      {/* ---- Latest from the channel ---- */}
-      <section className="bg-[color:var(--nh-bone)] py-20 md:py-24">
+      {/* ---- Latest from the channel (desktop; phones have it in the podcast room) ---- */}
+      <section className="hidden bg-[color:var(--nh-bone)] py-20 md:block md:py-24">
         <Container size="xl">
           <div className="grid items-start gap-10 md:grid-cols-[0.9fr_1.1fr] md:gap-16">
             <div className="min-w-0">
@@ -216,24 +240,11 @@ export default async function BrianHallamMinistriesPage() {
               <h2 className="u-display-dramatic text-ink mt-4 text-[clamp(1.75rem,4vw,2.75rem)]">
                 Fresh from Apostle Brian.
               </h2>
-              <p className="text-stone mt-5 hidden text-lg leading-relaxed md:block">
+              <p className="text-stone mt-5 text-lg leading-relaxed">
                 New teaching lands on YouTube through the week, and the podcast is on
                 whichever app you already use.
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <PlatformPill
-                  platform="apple"
-                  label="Apple Podcasts"
-                  href={BHM.podcast.apple}
-                />
-                <PlatformPill
-                  platform="spotify"
-                  label="Spotify"
-                  href={BHM.podcast.spotify}
-                />
-                <PlatformPill platform="youtube" label="YouTube" href={BHM.youtube} />
-                <PlatformPill platform="rss" label="RSS feed" href={BHM.podcast.rss} />
-              </div>
+              <div className="mt-7 flex flex-wrap gap-3">{pills}</div>
               <Link
                 href="/podcasts#brian-hallam-podcast"
                 className="group mt-7 inline-flex items-center gap-2 text-sm font-semibold text-[color:var(--nh-scarlet-ink)]"
@@ -246,68 +257,7 @@ export default async function BrianHallamMinistriesPage() {
               </Link>
             </div>
 
-            <div className="order-first md:order-none">
-              {latest ? (
-                <>
-                  <div className="flex items-baseline justify-between gap-4">
-                    <p className="u-eyebrow text-[color:var(--nh-gold-ink)]">
-                      Latest on YouTube
-                    </p>
-                    <p className="text-fog text-sm whitespace-nowrap">
-                      {formatDate(latest.publishedAt.slice(0, 10))}
-                    </p>
-                  </div>
-                  <div className="mt-4">
-                    <SermonPlayer
-                      videoId={latest.videoId}
-                      posterUrl={null}
-                      title={latest.title}
-                      kind="episode"
-                    />
-                  </div>
-                  <h3 className="u-display-soft text-ink mt-4 text-lg leading-snug md:text-xl">
-                    {latest.title}
-                  </h3>
-                  <a
-                    href={`https://www.youtube.com/watch?v=${latest.videoId}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-ink mt-2 inline-flex items-center gap-2 text-sm font-semibold underline-offset-4 hover:underline"
-                  >
-                    <PlatformIcon platform="youtube" size={16} />
-                    Open on YouTube
-                    <span aria-hidden="true">↗</span>
-                  </a>
-                </>
-              ) : (
-                <a
-                  href={BHM.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={`${BHM.name} on YouTube`}
-                  className="group bg-ink block overflow-hidden rounded-[var(--radius-lg)] border border-[color:var(--nh-border)]"
-                >
-                  <div className="aspect-video overflow-hidden">
-                    <Image
-                      src={MEDIA.podcast.src}
-                      alt={MEDIA.podcast.alt}
-                      width={MEDIA.podcast.width}
-                      height={MEDIA.podcast.height}
-                      sizes="(min-width: 768px) 55vw, 100vw"
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                    />
-                  </div>
-                  <div className="bg-paper flex items-center justify-between gap-4 border-t border-[color:var(--nh-border)] px-5 py-3.5">
-                    <span className="u-eyebrow text-[color:var(--nh-gold-ink)]">
-                      The channel
-                    </span>
-                    <span className="text-ink text-sm font-semibold whitespace-nowrap">
-                      Watch on YouTube <span aria-hidden="true">↗</span>
-                    </span>
-                  </div>
-                </a>
-              )}
-            </div>
+            <LatestEpisode video={video} audio={audio} youtubeUrl={BHM.youtube} />
           </div>
         </Container>
       </section>
